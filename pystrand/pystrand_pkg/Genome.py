@@ -8,22 +8,24 @@ class Genome:
 	def __init__(self, 
 			  genome_shape, 
 			  random_init = False,
-			  gene_vals = np.array([0, 1]),
+			  gene_vals = [0, 1],
 			  seed = 0,
 			  *args, 
 			  **kwargs):
 
 		self._gene_vals = gene_vals
-
+		
 		if random_init:
-			self._genotype = np.random.choice(gene_vals, genome_shape)
+			self._genotype = np.random.choice(self._gene_vals, genome_shape)
 		else:
 			self._genotype = np.zeros(genome_shape)
 
 		return super().__init__(*args, **kwargs)
 
 	def mutate(self, mutation_prob=0.01):
-		pass
+		if self._genotype.size != 0:
+			if np.random.random(1) < mutation_prob:
+				self._genotype.flat[np.random.choice(self._genotype.size, 1)] = np.random.choice(self._gene_vals, 1)
 
 	def crossover(self, partnerGenomes, pattern):
 		pass

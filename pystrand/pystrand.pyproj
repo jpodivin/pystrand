@@ -12,6 +12,7 @@
     <Name>pystrand</Name>
     <RootNamespace>pystrand</RootNamespace>
     <InterpreterId>MSBuild|pystrandenv|$(MSBuildProjectFullPath)</InterpreterId>
+    <TestFramework>unittest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
