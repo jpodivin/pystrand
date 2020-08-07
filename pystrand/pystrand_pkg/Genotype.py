@@ -32,15 +32,15 @@ class Genotype:
 					self._genome.size, 1)] = np.random.choice(
 						self._gene_vals, 1)
 
-	def crossover(self, partner_genomes, mask):
-		for partner_genome in partner_genomes:
-			self._gene_vals[mask] = partner_genome.get_genotype()[mask]	
+	def crossover(self, partner_genotypes, mask):
+		for partner_genotypes in partner_genotypes:
+			self._gene_vals[mask] = partner_genotypes.genome[mask]	
 
 	def clone(self):
 		return Genotype(
 			self.genotype_shape, 
 			gene_vals = self.gene_vals,
-			default_genome = self.genome)
+			default_genome = self.genome.copy())
 
 	@property
 	def genotype_shape(self):
