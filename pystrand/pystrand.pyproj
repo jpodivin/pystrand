@@ -23,7 +23,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="pystrand_pkg\Genome.py" />
+    <Compile Include="pystrand_pkg\Genotype.py" />
     <Compile Include="pystrand_pkg\Population.py">
       <SubType>Code</SubType>
     </Compile>
@@ -38,6 +38,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="examples\" />
     <Folder Include="pystrand_pkg\" />
     <Folder Include="tests\" />
   </ItemGroup>

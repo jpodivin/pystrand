@@ -1,44 +1,58 @@
 import unittest
 import numpy as np
-from pystrand_pkg.Genome import Genome
+from pystrand_pkg.Genotype import Genotype
 
 class Test_test_genome_manipulation(unittest.TestCase):
 
     test_shapes = [(i, j, k) 
-                  for i in range(10) 
-                  for j in range(10) 
-                  for k in range(10)]
+                  for i in range(1, 10) 
+                  for j in range(1, 10) 
+                  for k in range(1, 10)]
 
     def test_genotype_initiation_shape(self):        
         """
         Checks shapes of genomes.
         """
         for shape in self.test_shapes:
-            genome = Genome(shape)
-            self.assertIsInstance(genome, Genome)
-            self.assertEqual(genome.get_genotype_shape(), shape)
+            genome = Genotype(shape)
+            self.assertIsInstance(genome, Genotype)
+            self.assertEqual(genome.genotype_shape, shape)
 
     def test_genotype_initiation_zeros(self):
         """
         Checks properties of zero initialized genomes.
         """
         for shape in self.test_shapes:
-            genome = Genome(shape)
-            self.assertTrue(np.array_equiv(genome.get_genotype(), np.zeros(shape)))
+            genome = Genotype(shape)
+            self.assertTrue(np.array_equiv(genome.genome, np.zeros(shape)))
 
     def test_genotype_initiation_random(self):
         """
         Checks properties of randomly initialized genomes.
-        First 1000 shape settings aren't used because the resulting genome is length 0.
+        """
+        for shape in self.test_shapes:
+            genome = Genotype(shape, 
+                            random_init = True)
+
+            self.assertTrue(genome.genome.max() <= 1.0)
+
+            self.assertTrue(genome.genome.min() >= 0.0)
+
+    def test_genotype_mutation_bounds(self):
+        """
         """
         for shape in self.test_shapes[1000:]:
-            genome = Genome(shape, 
-                            random_init = True)
-            self.assertFalse(np.array_equiv(genome.get_genotype(), np.zeros(shape)))
+            genome = Genotype(shape, 
+                            random_init = False)
+            original_genome = genome.clone()
+            genome.mutate(1.0)
 
-            self.assertTrue(genome.get_genotype().max() <= 1.0)
+            self.assertFalse(np.array_equiv(genome.genome, original_genome.genome))
 
-            self.assertTrue(genome.get_genotype().min() >= 0.0)
+            self.assertTrue(genome.genome.max() <= 1.0)
+
+            self.assertTrue(genome.genome.min() >= 0.0)
+
 
 if __name__ == '__main__':
     unittest.main()
