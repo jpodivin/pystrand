@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a2daf862-3810-4ef7-87f4-685bf66c5459</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests\test_genome_manipulation.py</StartupFile>
+    <StartupFile>tests\test_genotype_manipulation.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -33,7 +33,10 @@
     <Compile Include="setup.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="tests\test_genome_manipulation.py">
+    <Compile Include="tests\test_genotype_manipulation.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\test_population.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

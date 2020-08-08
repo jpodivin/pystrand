@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from pystrand_pkg.Genotype import Genotype
 
-class Test_test_genome_manipulation(unittest.TestCase):
+class Test_genotype_manipulation(unittest.TestCase):
 
     test_shapes = [(i, j, k) 
                   for i in range(1, 10) 

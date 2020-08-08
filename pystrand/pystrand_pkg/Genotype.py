@@ -4,6 +4,7 @@ class Genotype:
 
 	_genome = np.array([])
 	_gene_vals = np.array([])
+	_genotype_fitness = 0.0
 
 	def __init__(self, 
 			  genome_shape, 
@@ -53,3 +54,7 @@ class Genotype:
 	@property
 	def gene_vals(self):
 		return self._gene_vals
+
+	@property
+	def fitness(self):
+		return self._genotype_fitness
