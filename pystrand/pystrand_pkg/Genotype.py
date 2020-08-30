@@ -58,3 +58,9 @@ class Genotype:
 	@property
 	def fitness(self):
 		return self._genotype_fitness
+
+	def set_fitness(self, new_fitness):
+		if not isinstance(new_fitness, float):
+			raise Exception()
+
+		self._genotype_fitness = new_fitness

@@ -41,6 +41,14 @@ class Population(object):
                 pass
         else:
             pass
+    def evaluate_individual(self, target):
+        pass
+
+    def evaluate_population(self, target = None):
+        if target == None:
+            self._individuals = [individual.fitness(0.0) for individual in self._individuals]
+        else:
+            self._individuals = [evaluate_individual(individual) for individual in self._individuals]
 
     @property
     def population_size(self):
