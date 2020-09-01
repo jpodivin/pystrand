@@ -7,8 +7,9 @@ class Population(object):
     Collection of individual genotypes.
     Provides facilities for working with multiple genotypes at the same time.
     """
-    _individuals = np.array([])
-
+    
+    _dtype = []
+    _individuals = np.array([], dtype=_dtype)
     def __init__(self, 
                  pop_size, 
                  genome_shapes, 
@@ -18,15 +19,18 @@ class Population(object):
                  default_genome = None, 
                  *args, **kwargs):
 
+        self._dtype = [('fitness', float), ('individual', np.object)]
+
         if type(genome_shapes) is tuple:
             genome_shapes = [genome_shapes for i in range(pop_size)]
-
-        self._individuals = np.array([Genotype(shape,
+        
+        self._individuals = np.array([(0.0,
+                                       Genotype(shape,
                                           random_init,
                                           gene_vals,
                                           seed,
-                                          default_genome) 
-                                 for shape, i in zip(genome_shapes, range(pop_size))])
+                                          default_genome))
+                                 for shape, i in zip(genome_shapes, range(pop_size))], dtype=self._dtype)
 
         return super().__init__(*args, **kwargs)
 
@@ -49,6 +53,9 @@ class Population(object):
             self._individuals = [individual.fitness(0.0) for individual in self._individuals]
         else:
             self._individuals = [evaluate_individual(individual) for individual in self._individuals]
+
+    def retrieve_best(self, n=1):
+        return np.sort
 
     @property
     def population_size(self):

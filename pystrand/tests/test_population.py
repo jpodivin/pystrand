@@ -15,7 +15,7 @@ class Test_population(unittest.TestCase):
 
             if pop_size > 0:
                 for individual in range(pop_size):
-                    self.assertIsInstance(population.individuals[individual], Genotype)
+                    self.assertIsInstance(population.individuals['individual'][individual], Genotype)
 
     def test_evaluation_permanence(self):
         for pop_size in self.pop_sizes:
@@ -23,8 +23,8 @@ class Test_population(unittest.TestCase):
             population = Population(pop_size,
                                     (100, 1))
 
-            for individual in population.individuals:
-                self.assertTrue(individual.fitness == 0.0)
+            for individual_fitness in population.individuals['fitness']:
+                self.assertTrue(individual_fitness == 0.0)
 
 if __name__ == '__main__':
     unittest.main()
