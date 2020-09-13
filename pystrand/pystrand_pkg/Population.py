@@ -10,6 +10,7 @@ class Population(object):
     
     _dtype = []
     _individuals = np.array([], dtype=_dtype)
+
     def __init__(self, 
                  pop_size, 
                  genome_shapes, 
@@ -38,13 +39,14 @@ class Population(object):
         for genotype in _individuals:
             genotype.mutate(mutation_prob)
     
-    def cross_genomes(self, secondary_population = None):
+    def cross_genomes(self, secondary_population = None, crossover_prob = 0.0):
 
         if secondary_population is None:
-            for genotype in _individuals:
-                pass
+            for genotype in self._individuals:
+                genotype.crossover()
         else:
             pass
+
     def evaluate_individual(self, target):
         pass
 
@@ -52,10 +54,15 @@ class Population(object):
         if target == None:
             self._individuals = [individual.fitness(0.0) for individual in self._individuals]
         else:
-            self._individuals = [evaluate_individual(individual) for individual in self._individuals]
+            self._individuals = [evaluate_individual(individual, target) for individual in self._individuals]
 
-    def retrieve_best(self, n=1):
-        return np.sort
+    def retrieve_best(self, n = 1, fraction = None):
+        sorted_population = np.sort(self._individuals, order='fitness')
+
+        if fraction is not None:
+            return sorted_population[:int(sorted_population.size()*fraction)]
+        else:
+            return sorted_population[:n]
 
     @property
     def population_size(self):
@@ -67,12 +74,12 @@ class Population(object):
 
     @property
     def avg_fitness(self):
-        return np.average([genotype.fitness for genotype in _individuals])
+        return np.average([genotype.fitness for genotype in self._individuals])
 
     @property
     def max_fitness(self):
-        return np.max([genotype.fitness for genotype in _individuals])
+        return np.max([genotype.fitness for genotype in self._individuals])
 
     @property
     def min_fitness(self):
-        return np.min([genotype.fitness for genotype in _individuals])
+        return np.min([genotype.fitness for genotype in self._individuals])
