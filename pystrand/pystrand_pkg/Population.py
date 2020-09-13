@@ -9,7 +9,9 @@ class Population(object):
     """
     
     _dtype = []
-    _individuals = np.array([], dtype=_dtype)
+    _individuals = np.array([], dtype = _dtype)
+    _genome_shapes = np.array([])
+    _gene_values = np.array([])
 
     def __init__(self, 
                  pop_size, 
@@ -20,53 +22,79 @@ class Population(object):
                  default_genome = None, 
                  *args, **kwargs):
 
-        self._dtype = [('fitness', float), ('individual', np.object)]
+        self._dtype = [('fitness', float), ('genotype', np.object)]
+        self._gene_values = gene_vals
 
         if type(genome_shapes) is tuple:
-            genome_shapes = [genome_shapes for i in range(pop_size)]
+            self._genome_shapes = [genome_shapes for i in range(pop_size)]
         
         self._individuals = np.array([(0.0,
-                                       Genotype(shape,
+                                       Genotype(
+                                          shape,
                                           random_init,
                                           gene_vals,
                                           seed,
                                           default_genome))
-                                 for shape, i in zip(genome_shapes, range(pop_size))], dtype=self._dtype)
+                                 for shape, i in zip(self._genome_shapes, range(pop_size))], dtype=self._dtype)
 
         return super().__init__(*args, **kwargs)
 
+    def replace_individuals(self, individuals):
+        self._individuals = individuals
+
+    def expand_population(self, target_pop_size, strategy = 'clone'):
+
+        if strategy == 'clone':
+                self._individuals = np.random.choice(self._individuals, target_pop_size)
+
+        elif strategy == 'random':            
+            new_individuals = np.array(
+                    [(0.0, Genotype(
+                        shape,
+                        random_init,
+                        gene_vals,
+                        seed,
+                        default_genome))
+                    for shape, i in zip(self._genome_shapes, range(target_pop_size-self.population_size))], 
+                    dtype=self._dtype)
+
+            self._individuals = np.append(self._individuals, new_individuals)
+
     def mutate_genotypes(self, mutation_prob = 0.01):
-        for genotype in _individuals:
-            genotype.mutate(mutation_prob)
+        for individual in _individuals:
+            individual.genotype.mutate(mutation_prob)
     
     def cross_genomes(self, secondary_population = None, crossover_prob = 0.0):
-
         if secondary_population is None:
-            for genotype in self._individuals:
-                genotype.crossover()
+            secondary_population = np.array([evaluated_individual.genotype for evaluated_individual in self._individuals])
+            for individual in self._individuals:
+                individual.genotype.crossover(secondary_population)
         else:
             pass
 
-    def evaluate_individual(self, target):
+    def evaluate_individual(self, individual, target):
         pass
 
     def evaluate_population(self, target = None):
         if target == None:
             self._individuals = [individual.fitness(0.0) for individual in self._individuals]
         else:
-            self._individuals = [evaluate_individual(individual, target) for individual in self._individuals]
+            self._individuals = [evaluate_individual(individual.genotype, target) for individual in self._individuals]
 
-    def retrieve_best(self, n = 1, fraction = None):
-        sorted_population = np.sort(self._individuals, order='fitness')
-
-        if fraction is not None:
-            return sorted_population[:int(sorted_population.size()*fraction)]
-        else:
-            return sorted_population[:n]
+    def retrieve_best(self, n = 1):
+        return np.sort(self._individuals, order='fitness')[:n]
 
     @property
     def population_size(self):
         return self._individuals.size
+
+    @property
+    def genome_shapes(self):
+        return self._genome_shapes
+    
+    @property
+    def gene_values(self):
+        return self._gene_values
 
     @property
     def individuals(self):
@@ -83,3 +111,7 @@ class Population(object):
     @property
     def min_fitness(self):
         return np.min([genotype.fitness for genotype in self._individuals])
+
+    @property
+    def fitness_std(self):
+        return np.std([genotype.fitness for genotype in self._individuals])
