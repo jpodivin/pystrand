@@ -29,13 +29,21 @@ class Genotype:
 	def mutate(self, mutation_prob=0.01):
 		if self._genome.size != 0:
 			if np.random.random(1) < mutation_prob:
-				self._genome.flat[np.random.choice(
-					self._genome.size, 1)] = np.random.choice(
-						self._gene_vals, 1)
+				position = np.random.choice(self._genome.size, 1)
+				gene_vals_subset = (self._gene_vals != self._genome.flat[position]).flatten()
+				self._genome.flat[position] = np.random.choice(
+						self._gene_vals[gene_vals_subset], 
+						1)
 
-	def crossover(self, partner_genotypes, mask):
-		for partner_genotypes in partner_genotypes:
-			self._gene_vals[mask] = partner_genotypes.genome[mask]	
+	def crossover(self, partner_genotype, mask):
+		
+		descendant_genome = np.copy(self._genome)
+		descendant_genome[mask] = partner_genotype.genome[mask]	
+
+		return Genotype(
+			self.genotype_shape,
+			gene_vals = self.gene_vals,
+			default_genome = descendant_genome)
 
 	def clone(self):
 		return Genotype(

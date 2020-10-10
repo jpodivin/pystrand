@@ -14,8 +14,8 @@ class Test_population(unittest.TestCase):
             self.assertTrue(population.population_size == pop_size)
 
             if pop_size > 0:
-                for individual in range(pop_size):
-                    self.assertIsInstance(population.individuals['individual'][individual], Genotype)
+                for individual in population.individuals:
+                    self.assertIsInstance(individual['genotype'], Genotype)
 
     def test_evaluation_permanence(self):
         for pop_size in self.pop_sizes:
