@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a2daf862-3810-4ef7-87f4-685bf66c5459</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests\test_genotype_manipulation.py</StartupFile>
+    <StartupFile>tests\test_population.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

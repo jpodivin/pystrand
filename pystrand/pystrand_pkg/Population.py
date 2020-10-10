@@ -67,10 +67,9 @@ class Population(object):
     def cross_genomes(self, secondary_population = None, crossover_prob = 0.0):
         if secondary_population is None:
             secondary_population = np.array([evaluated_individual.genotype for evaluated_individual in self._individuals])
-            for individual in self._individuals:
+        
+        for individual in self._individuals:
                 individual.genotype.crossover(secondary_population)
-        else:
-            pass
 
     def evaluate_individual(self, individual, target):
         pass
