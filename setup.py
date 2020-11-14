@@ -20,4 +20,11 @@ setuptools.setup(
         "Topic :: Scientific/Engineering :: Artificial Life",
     ],
     python_requires='>=3.6',
+    install_requires=[ 
+        'numpy'
+    ],
+    extras_require={
+        'tests': ['pytest',
+                  'flake8'],
+    },
 )
