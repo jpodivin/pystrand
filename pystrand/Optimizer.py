@@ -1,6 +1,5 @@
 import numpy as np
-from pystrand_pkg.Genotype import Genotype
-from pystrand_pkg.Population import Population
+from pystrand import Genotype, Population
 
 class Optimizer(object):
     """description of class"""

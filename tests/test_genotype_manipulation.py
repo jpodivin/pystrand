@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from pystrand_pkg.Genotype import Genotype
+from pystrand import Genotype
 
 class Test_genotype_manipulation(unittest.TestCase):
 

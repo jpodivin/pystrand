@@ -1,5 +1,5 @@
 import numpy as np
-from pystrand_pkg.Genotype import Genotype
+from pystrand import Genotype
 
 
 class Population(object):

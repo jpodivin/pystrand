@@ -1,6 +1,5 @@
 import unittest
-from pystrand_pkg.Population import Population
-from pystrand_pkg.Genotype import Genotype
+from pystrand import Population, Genotype
 
 class Test_population(unittest.TestCase):
     pop_sizes = [i for i in range(100)]
