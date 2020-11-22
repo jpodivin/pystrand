@@ -24,11 +24,11 @@ class Genotype:
 		else:
 			self._genome = np.zeros(genome_shape)
 
-		return super().__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 	def mutate(self, mutation_prob=0.01):
 		if self._genome.size != 0:
-			if np.random.random(1) < mutation_prob:
+			if np.random.random_sample(1) < mutation_prob:
 				position = np.random.choice(self._genome.size, 1)
 				gene_vals_subset = (self._gene_vals != self._genome.flat[position]).flatten()
 				self._genome.flat[position] = np.random.choice(
