@@ -50,7 +50,10 @@ class Population(object):
         self._individuals = individuals
 
     def expand_population(self, target_pop_size, strategy = 'clone'):
-
+        """
+        Increases number of indivuals in given population.
+        
+        """
         if strategy == 'clone':
                 self._individuals = np.random.choice(self._individuals, target_pop_size)
 
@@ -68,6 +71,9 @@ class Population(object):
             self._individuals = np.append(self._individuals, new_individuals)
 
     def mutate_genotypes(self, mutation_prob = 0.01):
+        """
+        Applies mutation operator to individuals with given probability.
+        """
         for individual in self._individuals:
             individual.genotype.mutate(mutation_prob)
     
