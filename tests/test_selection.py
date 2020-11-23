@@ -1,5 +1,5 @@
 import unittest
-from pystrand import Selection, Population, RandomSelection
+from pystrand import Selection, Population, RandomSelection, RouletteSelection
 
 class Dummy_Selection_Test(unittest.TestCase):
     test_population = Population(100, (100, 1))
@@ -40,5 +40,30 @@ class Random_Selection_Test(unittest.TestCase):
             self.assertAlmostEqual(
                 selected_population.population_size/self.test_population.population_size,
                 selection_probability,
+                places=1
+                )
+
+class Roulette_Selection_Test(unittest.TestCase):
+
+    test_population = Population(1000, (100, 1))
+    population_fractions = [0.1, 0.5, 0.9]
+
+    def test_selection_init(self):
+        selection = RouletteSelection(0.5)
+        self.assertIsInstance(selection, RouletteSelection)
+
+    def test_selection(self):
+        for population_fraction in self.population_fractions:
+            selection = RouletteSelection(population_fraction)
+            selected_population = selection.__select__(self.test_population)
+            
+            self.assertNotEqual(
+                selected_population.population_size,
+                self.test_population.population_size
+                )
+
+            self.assertAlmostEqual(
+                selected_population.population_size/self.test_population.population_size,
+                population_fraction,
                 places=1
                 )

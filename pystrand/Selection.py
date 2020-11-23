@@ -6,7 +6,8 @@ class Selection(object):
     Base selection class.
     """
     _name = ""
-
+    _rng = None
+    
     def __init__(self, 
                 *args, 
                 **kwargs):
@@ -53,8 +54,7 @@ class RandomSelection(Selection):
     The selection probability is given as argument. 
     """
 
-    _selection_prob = 0.0
-    _rng = None
+    _selection_prob = 0.0    
 
     def __init__(self,
                 selection_prob,
@@ -84,14 +84,34 @@ class RandomSelection(Selection):
 
 class RouletteSelection(Selection):
 
-    def __init__(self, 
+    _target_population_size = 0
+
+    def __init__(self,
+                target_population_size,
                 *args,
                 **kwargs):
+        
+        self._target_population_size = target_population_size
+        self._rng = np.random.default_rng()
 
         super().__init__(args, kwargs)
 
     def __select__(self, population):
         selected_individuals = []
+        
+        probs = population.individuals["fitness"]
+
+        if probs.max() > 0.0:
+            scaling = lambda x: x / np.sum(probs)
+            probs = np.apply_along_axis(scaling, 0, probs)
+        else:
+            probs = np.full(probs.shape, 1.0/probs.size)
+
+        while len(selected_individuals)/population.population_size < self._target_population_size:
+            selected_individuals.append(self._rng.choice(
+                population.individuals, 
+                size=1,
+                p=probs))
 
         return self.__get_selected_population__(
             selected_individuals, 
