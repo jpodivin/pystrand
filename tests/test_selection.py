@@ -40,5 +40,5 @@ class Random_Selection_Test(unittest.TestCase):
             self.assertAlmostEqual(
                 selected_population.population_size/self.test_population.population_size,
                 selection_probability,
-                places=3
+                places=1
                 )
