@@ -38,7 +38,7 @@ class Optimizer(object):
 
         self._max_iterations = max_iterations
         
-        return super().__init__(*args, **kwargs) 
+        super().__init__(*args, **kwargs) 
 
     def select_genomes(self):
         n_individuals = int(self._population.population_size * self._selected_fraction)
@@ -74,7 +74,7 @@ class Optimizer(object):
             if self._population.max_fitness == 1.0:
                 break
             else:
-                select_genomes()
+                self.select_genomes()
                 self._population.mutate_genotypes(self._mutation_probability)
                 self._population.cross_genomes(crossover_prob=self._crossover_probability)
             t += 1
