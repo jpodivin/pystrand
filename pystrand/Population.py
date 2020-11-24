@@ -7,7 +7,7 @@ class Population(object):
     Provides facilities for working with multiple genotypes at the same time.
     """
     
-    _dtype = []
+    _dtype = np.dtype([('fitness', float), ('genotype', np.object)])
     _individuals = np.array([], dtype = _dtype)
     _genome_shapes = np.array([])
     _gene_values = np.array([])
@@ -26,7 +26,6 @@ class Population(object):
                  *args,
                  **kwargs):
 
-        self._dtype = [('fitness', float), ('genotype', np.object)]
         self._gene_values = gene_vals
 
         if type(genome_shapes) is tuple:
@@ -118,7 +117,7 @@ class Population(object):
 
     @property
     def max_fitness(self):
-        return np.max([genotype.fitness for genotype in self._individuals])
+        return np.max([genotype['fitness'] for genotype in self._individuals])
 
     @property
     def min_fitness(self):

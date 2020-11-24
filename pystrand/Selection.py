@@ -118,5 +118,5 @@ class RouletteSelection(Selection):
             population.population_size, 
             population.genome_shapes, 
             population.gene_values,
-            population.individuals.dtype
+            population._dtype
             )
