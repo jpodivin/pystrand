@@ -26,8 +26,19 @@ class Population(object):
                  *args,
                  **kwargs):
         """
-        New individuals are not generated if seed_individuals isn't None.
 
+        Arguments:
+        pop_size -- number of individuals in given population
+        genome_shapes -- shapes of individual genomes as numpy arrays
+        random_init -- if the genomes are supposed to be randomized
+        gene_vals -- possible values of genes for given population
+        seed -- 
+        default_genome -- used as genome for entire population, 
+                          if random_init = False
+        seed_individuals -- numpy array of evaluated inidividuals
+        individual_dtype -- numpy dtype defined by Population class
+
+        New individuals are not generated if seed_individuals isn't None.
         """
         self._gene_values = gene_vals
         
