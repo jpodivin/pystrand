@@ -20,7 +20,16 @@ class Selection(object):
         genome_shapes, 
         gene_values,
         individual_dtype):
-
+        """
+        Creates new Population object from selected_individuals. 
+        
+        Arguments:
+        selected_individuals -- seed individuals forming the population
+        population_size -- number of individuals in given population
+        genome_shapes -- shapes of individual genomes as numpy arrays
+        gene_values -- possible values of genes for given population
+        individual_dtype -- numpy dtype defined by Population class
+        """
         selected_individuals = np.array(
             selected_individuals,
             dtype=individual_dtype
@@ -51,7 +60,7 @@ class Selection(object):
 class RandomSelection(Selection):
     """
     Randomly selects a fraction of individuals in given population.
-    The selection probability is given as argument. 
+    The selection probability is given as argument.     
     """
 
     _selection_prob = 0.0    
@@ -83,7 +92,11 @@ class RandomSelection(Selection):
             )
 
 class RouletteSelection(Selection):
+    """
+    Naive implementation of Roulette selection (or Fitness proportionate selection).
+    Checks for case of maximum fitness = 0 and assignes equal probability to all individuals.
 
+    """
     _target_population_size = 0
 
     def __init__(self,
