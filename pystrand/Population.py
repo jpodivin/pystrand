@@ -25,12 +25,17 @@ class Population(object):
                  seed_individuals = None,
                  *args,
                  **kwargs):
+        """
+        New individuals are not generated if seed_individuals isn't None.
 
+        """
         self._gene_values = gene_vals
-
+        
         if type(genome_shapes) is tuple:
             self._genome_shapes = [genome_shapes for i in range(pop_size)]
-
+        elif type(genome_shapes) is list:
+            self._genome_shapes = genome_shapes        
+        
         if seed_individuals is not None:
             self._individuals = seed_individuals
         else:
@@ -48,10 +53,21 @@ class Population(object):
     def replace_individuals(self, individuals):
         self._individuals = individuals
 
-    def expand_population(self, target_pop_size, strategy = 'clone'):
+    def expand_population(
+        self, 
+        target_pop_size, 
+        strategy = 'clone'):
+
         """
         Increases number of indivuals in given population.
         
+        Arguments:
+
+        target_pop_size -- number of individuals we want in population.
+        strategy -- how are the new individuals created.
+                    Two available options are 'clone' and 'random'.
+                    The 'clone' strategy selects random existing individuals,
+                    while the 'random' strategy generates new ones.
         """
         if strategy == 'clone':
                 self._individuals = np.random.choice(self._individuals, target_pop_size)
@@ -93,6 +109,9 @@ class Population(object):
             self._individuals = [self.evaluate_individual(individual.genotype, target) for individual in self._individuals]
 
     def retrieve_best(self, n = 1):
+        """
+        'n' individuals with highest value of fitness are retrieved.
+        """
         return np.sort(self._individuals, order='fitness')[:n]
 
     @property
