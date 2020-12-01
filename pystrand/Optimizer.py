@@ -2,7 +2,7 @@ import numpy as np
 from pystrand import Genotype, Population
 
 class Optimizer(object):
-    """description of class"""
+    """Base optimizer class."""
     _population = None
     _max_iterations = 0
     _target_genotype = np.array([])

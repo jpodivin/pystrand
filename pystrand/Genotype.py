@@ -1,7 +1,9 @@
 import numpy as np
 
 class Genotype:
-
+	"""
+	
+	"""
 	_genome = np.array([])
 	_gene_vals = np.array([])
 	_genotype_fitness = 0.0
@@ -27,6 +29,14 @@ class Genotype:
 		super().__init__(*args, **kwargs)
 
 	def mutate(self, mutation_prob=0.01):
+		"""
+		Alters one gene (symbol) with given probability.
+		New symbol is selected from subset of _gene_vals.
+
+		Arguments:
+		mutation_prob -- float in range [0, 1.0] inclusive.
+						 Other values result in error, or undefined behavior.
+		"""
 		if self._genome.size != 0:
 			if np.random.random_sample(1) < mutation_prob:
 				position = np.random.choice(self._genome.size, 1)
@@ -36,7 +46,9 @@ class Genotype:
 						1)
 
 	def crossover(self, partner_genotype, mask):
+		"""
 		
+		"""
 		descendant_genome = np.copy(self._genome)
 		descendant_genome[mask] = partner_genotype.genome[mask]	
 
@@ -46,6 +58,11 @@ class Genotype:
 			default_genome = descendant_genome)
 
 	def clone(self):
+		"""
+		Returns copy of this Genome object. 
+		Genome, gene values and genome shape are all preserved. 
+		"""
+		
 		return Genotype(
 			self.genotype_shape, 
 			gene_vals = self.gene_vals,
