@@ -7,7 +7,7 @@ class Population(object):
     Provides facilities for working with multiple genotypes at the same time.
     """
     
-    _dtype = np.dtype([('fitness', float), ('genotype', np.object)])
+    _dtype = np.dtype([('fitness', 'd'), ('genotype', 'O')])
     _individuals = np.array([], dtype = _dtype)
     _genome_shapes = np.array([])
     _gene_values = np.array([])
