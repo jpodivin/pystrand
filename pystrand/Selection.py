@@ -56,6 +56,10 @@ class Selection(object):
             population.gene_values,
             population.individuals.dtype
             )
+            
+    def select(self, population):
+
+        return self.__select__(population)
 
 class RandomSelection(Selection):
     """
@@ -97,14 +101,14 @@ class RouletteSelection(Selection):
     Checks for case of maximum fitness = 0 and assignes equal probability to all individuals.
 
     """
-    _target_population_size = 0
+    _selected_population_fraction = 0
 
     def __init__(self,
-                target_population_size,
+                selected_population_fraction,
                 *args,
                 **kwargs):
         
-        self._target_population_size = target_population_size
+        self._selected_population_fraction = selected_population_fraction
         self._rng = np.random.default_rng()
 
         super().__init__(args, kwargs)
@@ -120,7 +124,7 @@ class RouletteSelection(Selection):
         else:
             probs = np.full(probs.shape, 1.0/probs.size)
 
-        while len(selected_individuals)/population.population_size < self._target_population_size:
+        while len(selected_individuals)/population.population_size < self._selected_population_fraction:
             selected_individuals.append(self._rng.choice(
                 population.individuals, 
                 size=1,

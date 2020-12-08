@@ -1,22 +1,25 @@
 import numpy as np
-from pystrand import Genotype, Population
+from pystrand import Genotype, Population, Selection, RouletteSelection
 
 class Optimizer(object):
-    """Base optimizer class."""
+    """Base optimizer class.
+    
+    Raises:
+        TypeError: if supplied wrong selection method type 
+    """
     _population = None
     _max_iterations = 0
     _target_genotype = np.array([])
     _mutation_probability = 0.0
     _crossover_probability = 0.0
     _selection_method = None
-    _selected_fraction = 0.0
 
     def __init__(self, 
                  target_genotype, 
                  max_iterations,
                  mutation_prob = 0.001,
                  crossover_prob = 0.0,
-                 selection_method = 'top',
+                 selection_method = 'roulette',
                  selected_fraction = 0.1,
                  population = None,
                  outfile='', 
@@ -26,8 +29,17 @@ class Optimizer(object):
         self._target_genotype = target_genotype
         self._mutation_probability = mutation_prob
         self._crossover_probability = crossover_prob
-        self._selection_method = selection_method
-        self._selected_fraction = selected_fraction
+
+        if type(selection_method) is str:
+            if selection_method == 'roulette':
+                self._selection_method = RouletteSelection(selected_fraction)
+        elif type(selection_method) is Selection:
+            self._selection_method = selection_method
+        else:
+            raise TypeError(
+                'Invalid selection type.',
+                type(selection_method)
+                )
 
         if population is not None:
             self._population = population
@@ -41,11 +53,7 @@ class Optimizer(object):
         super().__init__(*args, **kwargs) 
 
     def select_genomes(self):
-        n_individuals = int(self._population.population_size * self._selected_fraction)
-
-        if self._selection_method == 'top':
-            self._population.replace_individuals(self._population.retrieve_best(n_individuals))
-            self._population.expand_population(n_individuals//self._selected_fraction)
+        self._population = self._selection_method.select(self._population)
 
     def fit(self,verbose = 1):
         """
@@ -60,8 +68,7 @@ class Optimizer(object):
             }
 
         t = 0
-        pop_size = self._population.population_size
-
+        
         while t < self._max_iterations:          
             history["iteration"].append(t)
             history["max_fitness"].append(self._population.max_fitness)
