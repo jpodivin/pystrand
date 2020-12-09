@@ -100,24 +100,17 @@ class Population(object):
         """
         Applies mutation operator to individuals with given probability.
         """
-        for individual in self._individuals:
-            individual.genotype.mutate(mutation_prob)
-    
-    def cross_genomes(self, secondary_population = None, crossover_prob = 0.0):
+        for genotype in self._individuals['genotype']:
+            genotype.mutate(mutation_prob)
+
+    def cross_genomes(self, 
+        secondary_population = None, 
+        crossover_prob = 0.0):
         if secondary_population is None:
-            secondary_population = np.array([evaluated_individual.genotype for evaluated_individual in self._individuals])
-        
-        for individual in self._individuals:
-                individual.genotype.crossover(secondary_population)
-
-    def evaluate_individual(self, individual, target):
-        pass
-
-    def evaluate_population(self, target = None):
-        if target == None:
-            self._individuals = [individual.fitness(0.0) for individual in self._individuals]
-        else:
-            self._individuals = [self.evaluate_individual(individual.genotype, target) for individual in self._individuals]
+            secondary_population = self._individuals['genotype']
+        for individual in self._individuals['genotype']:
+            if np.random.random_sample(1) < crossover_prob:
+                individual.crossover(np.random.choice(secondary_population))
 
     def retrieve_best(self, n = 1):
         """
@@ -143,7 +136,7 @@ class Population(object):
 
     @property
     def avg_fitness(self):
-        return np.average([genotype.fitness for genotype in self._individuals])
+        return np.average([genotype['fitness'] for genotype in self._individuals])
 
     @property
     def max_fitness(self):
@@ -151,9 +144,9 @@ class Population(object):
 
     @property
     def min_fitness(self):
-        return np.min([genotype.fitness for genotype in self._individuals])
+        return np.min([genotype['fitness'] for genotype in self._individuals])
 
     @property
     def fitness_std(self):
-        return np.std([genotype.fitness for genotype in self._individuals])
+        return np.std([genotype['fitness'] for genotype in self._individuals])
         

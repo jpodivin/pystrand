@@ -34,7 +34,7 @@ class Genotype:
 		New symbol is selected from subset of _gene_vals.
 
 		Arguments:
-		mutation_prob -- float in range [0, 1.0] inclusive.
+			mutation_prob -- float in range [0, 1.0] inclusive.
 						 Other values result in error, or undefined behavior.
 		"""
 		if self._genome.size != 0:
@@ -45,10 +45,18 @@ class Genotype:
 						self._gene_vals[gene_vals_subset], 
 						1)
 
-	def crossover(self, partner_genotype, mask):
+	def crossover(self, partner_genotype, mask = None):
 		"""
-		
-		"""
+		Arguments: 
+			partner_genotype --
+			mask -- determines which genes (symbols) are selected from parents.
+					If left as 'None' the mask is randomized each time. 
+					Thus impacting performance.
+		"""		
+		if mask is None:
+			#Random mask is used if none defined. 
+			mask = np.ndarray(self.genotype_shape, dtype=bool)
+			
 		descendant_genome = np.copy(self._genome)
 		descendant_genome[mask] = partner_genotype.genome[mask]	
 
@@ -85,7 +93,11 @@ class Genotype:
 		return self._genotype_fitness
 
 	def set_fitness(self, new_fitness):
+		"""
+		Raises:
+			TypeError: If 'new_fitness' isn't of type 'float'
+		"""
 		if not isinstance(new_fitness, float):
-			raise Exception()
+			raise TypeError()
 
 		self._genotype_fitness = new_fitness

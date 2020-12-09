@@ -24,16 +24,16 @@ class Selection(object):
         Creates new Population object from selected_individuals. 
         
         Arguments:
-        selected_individuals -- seed individuals forming the population
-        population_size -- number of individuals in given population
-        genome_shapes -- shapes of individual genomes as numpy arrays
-        gene_values -- possible values of genes for given population
-        individual_dtype -- numpy dtype defined by Population class
+            selected_individuals -- seed individuals forming the population
+            population_size -- number of individuals in given population
+            genome_shapes -- shapes of individual genomes as numpy arrays
+            gene_values -- possible values of genes for given population
+            individual_dtype -- numpy dtype defined by Population class
         """
         selected_individuals = np.array(
             selected_individuals,
-            dtype=individual_dtype
-            )
+            dtype=individual_dtype            
+            ).flatten()
 
         selected_population = Population(
             population_size, 
@@ -115,7 +115,7 @@ class RouletteSelection(Selection):
 
     def __select__(self, population):
         selected_individuals = []
-        
+        n_selected = int(population.population_size*self._selected_population_fraction)
         probs = population.individuals["fitness"]
 
         if probs.max() > 0.0:
@@ -124,12 +124,11 @@ class RouletteSelection(Selection):
         else:
             probs = np.full(probs.shape, 1.0/probs.size)
 
-        while len(selected_individuals)/population.population_size < self._selected_population_fraction:
-            selected_individuals.append(self._rng.choice(
+        selected_individuals = self._rng.choice(
                 population.individuals, 
-                size=1,
-                p=probs))
-
+                size = n_selected,
+                p = probs)
+                
         return self.__get_selected_population__(
             selected_individuals, 
             population.population_size, 
