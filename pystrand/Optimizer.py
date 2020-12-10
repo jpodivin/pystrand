@@ -95,7 +95,7 @@ class Optimizer(object):
         new_population.expand_population(self._population.population_size)
         self._population = new_population
 
-    def fit(self,verbose = 1):
+    def fit(self, verbose = 1):
         """
         Main training loop.
         """
@@ -116,8 +116,14 @@ class Optimizer(object):
             history["max_fitness"].append(self._population.max_fitness)
             history["min_fitness"].append(self._population.min_fitness)
             history["fitness_avg"].append(self._population.avg_fitness)
-            history["fitness_std"].append(self._population.fitness_std)            
-            
+            history["fitness_std"].append(self._population.fitness_std)
+
+            if verbose > 0:
+                print(" // ".join(
+                    [key + ": " + str(record[-1]) for key, record in history.items()]
+                    )
+                    )
+
             if self._population.max_fitness == 1.0:
                 break
             else:

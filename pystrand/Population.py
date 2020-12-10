@@ -61,8 +61,16 @@ class Population(object):
 
         super().__init__(*args, **kwargs)
 
-    def replace_individuals(self, individuals):
-        self._individuals = individuals
+    def replace_individuals(self, new_individuals):
+        """
+        Replaces existing individuals managed by population with 'new_individuals'.
+
+        Raises:
+            TypeError if new_individuals isn't numpy array of required dtype.
+        """
+        if type(new_individuals) is not np.ndarray or new_individuals.dtype is not self._dtype:
+            raise TypeError()
+        self._individuals = new_individuals
 
     def expand_population(
         self, 
@@ -106,6 +114,12 @@ class Population(object):
     def cross_genomes(self, 
         secondary_population = None, 
         crossover_prob = 0.0):
+        """
+        Crosses genomes of inidividuals with those in 'secondary_population'.
+        Arguments:
+            secondary_population --
+            crossover_prob --
+        """
         if secondary_population is None:
             secondary_population = self._individuals['genotype']
         for individual in self._individuals['genotype']:
@@ -118,6 +132,7 @@ class Population(object):
         """
         return np.sort(self._individuals, order='fitness')[:n]
 
+    #Properties for easier retrieval of frequently used values.
     @property
     def population_size(self):
         return self._individuals.size

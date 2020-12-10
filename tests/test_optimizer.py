@@ -73,7 +73,7 @@ class Optimizer_Small_test(unittest.TestCase):
             
 class Optimizer_Large_test(unittest.TestCase):
 
-    test_runtime = 10000
+    test_runtime = 1000
 
     target_genotypes = [
             np.array([0 for i in range(100)]),
