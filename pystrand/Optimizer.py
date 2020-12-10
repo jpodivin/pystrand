@@ -62,7 +62,7 @@ class Optimizer(object):
             Population parameter inferrence.
             """
             self._population = Population(
-                pop_size = np.sum(target_genotype.genome.shape)**2, 
+                pop_size = np.sum(target_genotype.genome.shape)*10, 
                 genome_shapes = target_genotype.genome.shape,
                 gene_vals = target_genotype.gene_vals,
                 random_init = True

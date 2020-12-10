@@ -106,38 +106,38 @@ class Optimizer_Large_test(unittest.TestCase):
 
             self.assertEqual(new_optimizer._target_genotype, target_genotype)
     
-    # def test_optimizer_run(self):
-    #     """
-    #     Short run of basic optimizer with default params and binary genome.
-    #     10000 generations should be enough to reach an optimal match.
-    #     However this is still stochastic process so the test will check:
-    #         - ticks of algorithm
-    #         - consistency of genotypes
-    #         - returned history of training
-    #     """      
+    def test_optimizer_run(self):
+        """
+        Short run of basic optimizer with default params and binary genome.
+        10000 generations should be enough to reach an optimal match.
+        However this is still stochastic process so the test will check:
+            - ticks of algorithm
+            - consistency of genotypes
+            - returned history of training
+        """      
         
-    #     for target_genotype in self.target_genotypes:
+        for target_genotype in self.target_genotypes:
 
-    #         target_genotype = Genotype(
-    #             target_genotype.shape, 
-    #             gene_vals=np.unique(target_genotype), 
-    #             default_genome=target_genotype)
+            target_genotype = Genotype(
+                target_genotype.shape, 
+                gene_vals=np.unique(target_genotype), 
+                default_genome=target_genotype)
 
-    #         new_optimizer = Optimizer(
-    #             target_genotype,
-    #             self.test_runtime, 
-    #             mutation_prob = 0.1,
-    #             crossover_prob = 0.1
-    #             )
+            new_optimizer = Optimizer(
+                target_genotype,
+                self.test_runtime, 
+                mutation_prob = 0.1,
+                crossover_prob = 0.1
+                )
 
-    #         history = new_optimizer.fit()
+            history = new_optimizer.fit()
             
-    #         self.assertIsInstance(history, dict)
+            self.assertIsInstance(history, dict)
 
-    #         self.assertTrue(
-    #             set(self.history_dict_keys).issubset(history.keys()) 
-    #             and set(history.keys()).issubset(self.history_dict_keys)
-    #             )
+            self.assertTrue(
+                set(self.history_dict_keys).issubset(history.keys()) 
+                and set(history.keys()).issubset(self.history_dict_keys)
+                )
 
-    #         self.assertLessEqual(max(history['iteration']), self.test_runtime)
+            self.assertLessEqual(max(history['iteration']), self.test_runtime)
             
