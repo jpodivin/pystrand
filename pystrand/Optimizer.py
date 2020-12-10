@@ -127,7 +127,6 @@ class Optimizer(object):
             if self._population.max_fitness == 1.0:
                 break
             else:
-                
                 self.select_genomes()
                 self._population.mutate_genotypes(self._mutation_probability)
 

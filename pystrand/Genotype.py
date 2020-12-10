@@ -38,12 +38,10 @@ class Genotype:
 						 Other values result in error, or undefined behavior.
 		"""
 		if self._genome.size != 0:
-			if np.random.random_sample(1) < mutation_prob:
-				position = np.random.choice(self._genome.size, 1)
-				gene_vals_subset = (self._gene_vals != self._genome.flat[position]).flatten()
-				self._genome.flat[position] = np.random.choice(
-						self._gene_vals[gene_vals_subset], 
-						1)
+			if np.random.random_sample() < mutation_prob:
+				position = np.random.choice(self._genome.size)
+				gene_vals_subset = np.setdiff1d(self._gene_vals, [self._genome.flat[position]])
+				self._genome.flat[position] = np.random.choice(gene_vals_subset)
 
 	def crossover(self, partner_genotype, mask = None):
 		"""
