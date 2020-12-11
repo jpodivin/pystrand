@@ -73,7 +73,7 @@ class Optimizer(object):
         super().__init__(*args, **kwargs) 
 
     def evaluate_individual(self, individual, target):
-        difference = np.sum(np.abs(individual - target))
+        difference = np.sum(np.not_equal(individual, target))
         return 1 - difference/individual.size
 
     def evaluate_population(self, target = None):
