@@ -1,6 +1,5 @@
 import numpy as np
-from pystrand import Genotype, Population
-from pystrand.Selection import Selection, RouletteSelection
+from pystrand import Genotype, Population, RouletteSelection, Selection
 
 class Optimizer(object):
     """Base optimizer class.

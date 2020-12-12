@@ -136,3 +136,4 @@ class RouletteSelection(Selection):
             population.gene_values,
             population._dtype
             )
+            
