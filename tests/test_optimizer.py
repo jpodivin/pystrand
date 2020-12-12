@@ -1,4 +1,4 @@
-from pystrand import Optimizer, Genotype
+from pystrand import Optimizer, Genotype, Population
 import unittest
 import numpy as np
 
@@ -22,16 +22,39 @@ class Optimizer_init_test(unittest.TestCase):
         
         for target_genotype in target_genotypes_small:
 
+            def fitness_fn(individual):
+                difference = np.sum(np.not_equal(individual, target_genotype))
+                return 1 - difference/individual.size
+
             target_genotype = Genotype(
                 target_genotype.shape, 
                 gene_vals=np.unique(target_genotype), 
-                default_genome=target_genotype)
+                default_genome=target_genotype
+                )
 
-            new_optimizer = Optimizer(target_genotype, 10)
+            population = Population(
+                pop_size = np.sum(target_genotype.genome.shape)*10, 
+                genome_shapes = target_genotype.genome.shape,
+                gene_vals = target_genotype.gene_vals,
+                random_init = True
+                )
+
+            new_optimizer = Optimizer(
+                fitness_fn,
+                10,
+                population = population,
+                mutation_prob = 0.1,
+                crossover_prob = 0.5
+                )
+
+            new_optimizer = Optimizer(
+                    fitness_fn,
+                    10,
+                    population)
 
             self.assertIsInstance(new_optimizer, Optimizer)
 
-            self.assertEqual(new_optimizer._target_genotype, target_genotype)
+            self.assertEqual(new_optimizer._fitness_function, fitness_fn)
 
     def test_optimizer_init_large(self):
         """
@@ -40,17 +63,39 @@ class Optimizer_init_test(unittest.TestCase):
         
         for target_genotype in target_genotypes_large:
 
+            def fitness_fn(individual):
+                difference = np.sum(np.not_equal(individual, target_genotype))
+                return 1 - difference/individual.size
+
             target_genotype = Genotype(
                 target_genotype.shape, 
                 gene_vals=np.unique(target_genotype), 
                 default_genome=target_genotype
                 )
 
-            new_optimizer = Optimizer(target_genotype, 10)
+            population = Population(
+                pop_size = np.sum(target_genotype.genome.shape)*10, 
+                genome_shapes = target_genotype.genome.shape,
+                gene_vals = target_genotype.gene_vals,
+                random_init = True
+                )
+
+            new_optimizer = Optimizer(
+                fitness_fn,
+                10,
+                population = population,
+                mutation_prob = 0.1,
+                crossover_prob = 0.5
+                )
+
+            new_optimizer = Optimizer(
+                fitness_fn,
+                10,
+                population)
 
             self.assertIsInstance(new_optimizer, Optimizer)
 
-            self.assertEqual(new_optimizer._target_genotype, target_genotype)
+            self.assertEqual(new_optimizer._fitness_function, fitness_fn)
 
 class Optimizer_Run_test(unittest.TestCase):
 
@@ -75,17 +120,31 @@ class Optimizer_Run_test(unittest.TestCase):
         """      
         
         for target_genotype in target_genotypes_small:
+            
+            def fitness_fn(individual):
+                difference = np.sum(np.not_equal(individual, target_genotype))
+                return 1 - difference/individual.size
 
             target_genotype = Genotype(
                 target_genotype.shape, 
                 gene_vals=np.unique(target_genotype), 
-                default_genome=target_genotype)
+                default_genome=target_genotype
+                )
+
+            population = Population(
+                pop_size = np.sum(target_genotype.genome.shape)*10, 
+                genome_shapes = target_genotype.genome.shape,
+                gene_vals = target_genotype.gene_vals,
+                random_init = True
+                )
 
             new_optimizer = Optimizer(
-                target_genotype,
-                self.test_runtime_short, 
+                fitness_fn,
+                self.test_runtime_short,
+                population = population,
                 mutation_prob = 0.1,
-                crossover_prob = 0.5)
+                crossover_prob = 0.5
+                )
 
             history = new_optimizer.fit(verbose=0)
             
@@ -109,14 +168,27 @@ class Optimizer_Run_test(unittest.TestCase):
         """      
         for target_genotype in target_genotypes_large:
 
+            def fitness_fn(individual):
+                difference = np.sum(np.not_equal(individual, target_genotype))
+                return 1 - difference/individual.size
+
             target_genotype = Genotype(
                 target_genotype.shape, 
                 gene_vals=np.unique(target_genotype), 
-                default_genome=target_genotype)
+                default_genome=target_genotype
+                )
+
+            population = Population(
+                pop_size = np.sum(target_genotype.genome.shape)*10, 
+                genome_shapes = target_genotype.genome.shape,
+                gene_vals = target_genotype.gene_vals,
+                random_init = True
+                )
 
             new_optimizer = Optimizer(
-                target_genotype,
-                self.test_runtime_long, 
+                fitness_fn,
+                self.test_runtime_short,
+                population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5
                 )
