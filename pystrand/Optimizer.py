@@ -9,37 +9,36 @@ class Optimizer(object):
     """
     _population = None
     _max_iterations = 0
-    _target_genotype = np.array([])
+    _fitness_function = lambda x: 0.0
     _mutation_probability = 0.0
     _crossover_probability = 0.0
     _selection_method = None
     
     def __init__(self, 
-                 target_genotype, 
+                 fitness_function, 
                  max_iterations,
+                 population,
                  mutation_prob = 0.001,
                  crossover_prob = 0.0,
                  selection_method = 'roulette',
-                 selected_fraction = 0.1,
-                 population = None,
+                 selected_fraction = 0.1,                 
                  outfile='', 
                  *args, 
                  **kwargs):
         """
         Arguments:
-            target_genotype -- 
+            fitness_function -- provides mapping from genotype to fitness value, [0, 1] 
             max_iterations -- 
+            population -- Seed population, can include known sub-optimal solutions.
             mutation_prob -- 0.001 by default
             crossover_prob -- 0.0 by default, no crossover will take place
             selection_method -- 
-            selected_fraction --
-            population -- Seed population, can include known sub-optimal solutions.
-                If the population isn't set the parameters are inferred from target_genotype.
+            selected_fraction --            
             outfile --
         Raises:
 
         """
-        self._target_genotype = target_genotype
+        self._fitness_function = fitness_function
         self._mutation_probability = mutation_prob
         self._crossover_probability = crossover_prob
 
@@ -54,38 +53,23 @@ class Optimizer(object):
                 type(selection_method)
                 )
 
-        if population is not None:
-            self._population = population
-        else:
-            """
-            Population parameter inferrence.
-            """
-            self._population = Population(
-                pop_size = np.sum(target_genotype.genome.shape)*10, 
-                genome_shapes = target_genotype.genome.shape,
-                gene_vals = target_genotype.gene_vals,
-                random_init = True
-                )
+        self._population = population 
 
         self._max_iterations = max_iterations
         
         super().__init__(*args, **kwargs) 
 
-    def evaluate_individual(self, individual, target):
-        difference = np.sum(np.not_equal(individual, target))
-        return 1 - difference/individual.size
+    def evaluate_individual(self, individual):
+        
+        return self._fitness_function(individual)
 
-    def evaluate_population(self, target = None):
+    def evaluate_population(self):
         evaluated_individuals = self._population.individuals
-        if target == None:            
-            for individual in evaluated_individuals:
-                individual['fitness'] = 0.0
-        else:
-            for individual in evaluated_individuals:
-                individual['fitness'] = self.evaluate_individual(
-                                individual['genotype'].genome, 
-                                target.genome
-                                )
+    
+        for individual in evaluated_individuals:
+            individual['fitness'] = self.evaluate_individual(
+                            individual['genotype'].genome
+                            )
             
         self._population.replace_individuals(evaluated_individuals)
 
@@ -109,7 +93,7 @@ class Optimizer(object):
         t = 0
         
         while t < self._max_iterations:
-            self.evaluate_population(self._target_genotype)
+            self.evaluate_population()
 
             history["iteration"].append(t)
             history["max_fitness"].append(self._population.max_fitness)
@@ -121,7 +105,7 @@ class Optimizer(object):
                 print(" // ".join(
                     [key + ": " + str(record[-1]) for key, record in history.items()]
                     )
-                    )
+                )
 
             if self._population.max_fitness == 1.0:
                 break
