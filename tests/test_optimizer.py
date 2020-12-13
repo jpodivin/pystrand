@@ -125,16 +125,10 @@ class Optimizer_Run_test(unittest.TestCase):
                 difference = np.sum(np.not_equal(individual, target_genotype))
                 return 1 - difference/individual.size
 
-            target_genotype = Genotype(
-                target_genotype.shape, 
-                gene_vals=np.unique(target_genotype), 
-                default_genome=target_genotype
-                )
-
             population = Population(
-                pop_size = np.sum(target_genotype.genome.shape)*10, 
-                genome_shapes = target_genotype.genome.shape,
-                gene_vals = target_genotype.gene_vals,
+                pop_size = np.sum(target_genotype.shape)*10, 
+                genome_shapes = target_genotype.shape,
+                gene_vals = np.unique(target_genotype),
                 random_init = True
                 )
 
@@ -172,16 +166,10 @@ class Optimizer_Run_test(unittest.TestCase):
                 difference = np.sum(np.not_equal(individual, target_genotype))
                 return 1 - difference/individual.size
 
-            target_genotype = Genotype(
-                target_genotype.shape, 
-                gene_vals=np.unique(target_genotype), 
-                default_genome=target_genotype
-                )
-
             population = Population(
-                pop_size = np.sum(target_genotype.genome.shape)*10, 
-                genome_shapes = target_genotype.genome.shape,
-                gene_vals = target_genotype.gene_vals,
+                pop_size = np.sum(target_genotype.shape)*10, 
+                genome_shapes = target_genotype.shape,
+                gene_vals = np.unique(target_genotype),
                 random_init = True
                 )
 
@@ -192,7 +180,7 @@ class Optimizer_Run_test(unittest.TestCase):
                 mutation_prob = 0.1,
                 crossover_prob = 0.5
                 )
-
+                
             history = new_optimizer.fit(verbose=0)
             
             self.assertIsInstance(history, dict)
