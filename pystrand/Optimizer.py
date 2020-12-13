@@ -9,7 +9,7 @@ class Optimizer(object):
     """
     _population = None
     _max_iterations = 0
-    _fitnes_function = lambda x: 0.0
+    _fitness_function = lambda x: 0.0
     _mutation_probability = 0.0
     _crossover_probability = 0.0
     _selection_method = None
@@ -38,7 +38,7 @@ class Optimizer(object):
         Raises:
 
         """
-        self._fitnes_function = fitness_function
+        self._fitness_function = fitness_function
         self._mutation_probability = mutation_prob
         self._crossover_probability = crossover_prob
 
@@ -61,7 +61,7 @@ class Optimizer(object):
 
     def evaluate_individual(self, individual):
         
-        return self._fitnes_function(individual)
+        return self._fitness_function(individual)
 
     def evaluate_population(self):
         evaluated_individuals = self._population.individuals
