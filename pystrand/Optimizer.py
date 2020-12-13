@@ -13,7 +13,8 @@ class Optimizer(object):
     _mutation_probability = 0.0
     _crossover_probability = 0.0
     _selection_method = None
-    
+    _elitism = 0
+
     def __init__(self, 
                  fitness_function, 
                  max_iterations,
@@ -41,7 +42,7 @@ class Optimizer(object):
         self._fitness_function = fitness_function
         self._mutation_probability = mutation_prob
         self._crossover_probability = crossover_prob
-
+        
         if type(selection_method) is str:
             if selection_method == 'roulette':
                 self._selection_method = RouletteSelection(selected_fraction)
@@ -57,6 +58,10 @@ class Optimizer(object):
 
         self._max_iterations = max_iterations
         
+        self._elitism = int(
+            kwargs.get('elitism', 0.0) * selected_fraction * population.population_size
+            )
+
         super().__init__(*args, **kwargs) 
 
     def evaluate_individual(self, individual):
@@ -111,6 +116,10 @@ class Optimizer(object):
                 break
             else:
                 self.select_genomes()
+
+                if self._elitism > 0.0:
+                    holdout = self._population.retrieve_best(self._elitims)
+
                 self._population.mutate_genotypes(self._mutation_probability)
 
                 if self._crossover_probability > 0.0:
