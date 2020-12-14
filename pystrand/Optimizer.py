@@ -118,7 +118,7 @@ class Optimizer(object):
                 self.select_genomes()
 
                 if self._elitism > 0.0:
-                    holdout = self._population.retrieve_best(self._elitims)
+                    holdout = self._population.retrieve_best(self._elitism)
 
                 self._population.mutate_genotypes(self._mutation_probability)
 
