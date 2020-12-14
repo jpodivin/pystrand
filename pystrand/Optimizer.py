@@ -59,10 +59,8 @@ class Optimizer(object):
         self._max_iterations = max_iterations
         
         self._elitism = int(
-            kwargs.get('elitism', 0.0) * selected_fraction * population.population_size
+            kwargs.get('elitism', 0.0) * population.population_size
             )
-
-        super().__init__(*args, **kwargs) 
 
     def evaluate_individual(self, individual):
         
@@ -80,7 +78,11 @@ class Optimizer(object):
 
     def select_genomes(self):
         new_population = self._selection_method.select(self._population)
-        new_population.expand_population(self._population.population_size)
+
+        new_population.expand_population(
+            self._population.population_size-self._elitism
+            )
+        
         self._population = new_population
 
     def fit(self, verbose = 1):
@@ -97,6 +99,8 @@ class Optimizer(object):
 
         t = 0
         
+        best_performers = np.array([])
+
         while t < self._max_iterations:
             self.evaluate_population()
 
@@ -117,8 +121,9 @@ class Optimizer(object):
             else:
                 self.select_genomes()
 
+                #After evaluation we keep n-best performers and don't alter them.
                 if self._elitism > 0.0:
-                    holdout = self._population.retrieve_best(self._elitism)
+                    best_performers = self._population.retrieve_best(self._elitism)
 
                 self._population.mutate_genotypes(self._mutation_probability)
 
@@ -126,6 +131,10 @@ class Optimizer(object):
                     self._population.cross_genomes(
                         crossover_prob = self._crossover_probability,
                         secondary_population = self._population.individuals['genotype'])
+                
+                if best_performers.size > 0:
+                    self._population.append_individuals(best_performers)
+
             t += 1
 
         return history

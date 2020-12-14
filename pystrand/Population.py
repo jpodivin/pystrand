@@ -132,6 +132,18 @@ class Population(object):
         """
         return np.sort(self._individuals, order='fitness')[:n]
 
+    def append_individuals(self, new_individuals):
+        """
+        Appends array of 'new_individuals' to existing individuals managed by Population.
+
+        Raises:
+            TypeError if new_individuals isn't numpy array of required dtype.
+        """
+        if type(new_individuals) is not np.ndarray or new_individuals.dtype is not self._dtype:
+            raise TypeError()
+
+        self._individuals.append(new_individuals)
+
     #Properties for easier retrieval of frequently used values.
     @property
     def population_size(self):

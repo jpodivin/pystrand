@@ -191,3 +191,46 @@ class Optimizer_Run_test(unittest.TestCase):
                 )
 
             self.assertLessEqual(max(history['iteration']), self.test_runtime_long)
+    
+    def test_optimizer_elitism_small(self):
+        """
+        Short run of basic optimizer with elitism and binary genome.
+        1000 generations should be enough to reach an optimal match.
+        However this is still stochastic process so the test will check:
+            - ticks of algorithm
+            - consistency of genotypes
+            - returned history of training
+        """      
+        
+        for target_genotype in target_genotypes_small:
+            
+            def fitness_fn(individual):
+                difference = np.sum(np.not_equal(individual, target_genotype))
+                return 1 - difference/individual.size
+
+            population = Population(
+                pop_size = np.sum(target_genotype.shape)*10, 
+                genome_shapes = target_genotype.shape,
+                gene_vals = np.unique(target_genotype),
+                random_init = True
+                )
+
+            new_optimizer = Optimizer(
+                fitness_fn,
+                self.test_runtime_short,
+                population = population,
+                mutation_prob = 0.1,
+                crossover_prob = 0.5,
+                elitism = 0.01
+                )
+
+            history = new_optimizer.fit(verbose=0)
+            
+            self.assertIsInstance(history, dict)
+
+            self.assertTrue(
+                set(self.history_dict_keys).issubset(history.keys()) 
+                and set(history.keys()).issubset(self.history_dict_keys)
+                )
+
+            self.assertLessEqual(max(history['iteration']), self.test_runtime_short)
