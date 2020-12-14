@@ -47,11 +47,6 @@ class Optimizer_init_test(unittest.TestCase):
                 crossover_prob = 0.5
                 )
 
-            new_optimizer = Optimizer(
-                    fitness_fn,
-                    10,
-                    population)
-
             self.assertIsInstance(new_optimizer, Optimizer)
 
             self.assertEqual(new_optimizer._fitness_function, fitness_fn)
@@ -87,11 +82,6 @@ class Optimizer_init_test(unittest.TestCase):
                 mutation_prob = 0.1,
                 crossover_prob = 0.5
                 )
-
-            new_optimizer = Optimizer(
-                fitness_fn,
-                10,
-                population)
 
             self.assertIsInstance(new_optimizer, Optimizer)
 

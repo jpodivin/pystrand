@@ -129,8 +129,10 @@ class Population(object):
     def retrieve_best(self, n = 1):
         """
         'n' individuals with highest value of fitness are retrieved.
+        Genotype objects don't support comparasion, individuals can't be sorted directly.
         """
-        return np.sort(self._individuals, order='fitness')[:n]
+        indices = np.argsort(self._individuals['fitness'])[-n:]
+        return self._individuals[indices].copy()
 
     def append_individuals(self, new_individuals):
         """
@@ -142,7 +144,7 @@ class Population(object):
         if type(new_individuals) is not np.ndarray or new_individuals.dtype is not self._dtype:
             raise TypeError()
 
-        self._individuals.append(new_individuals)
+        self._individuals = np.append(self._individuals, new_individuals)
 
     #Properties for easier retrieval of frequently used values.
     @property
