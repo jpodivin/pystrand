@@ -107,7 +107,7 @@ class RouletteSelection(Selection):
     _selected_population_fraction = 0
     
     def __init__(self,
-                selected_population_fraction
+                selected_population_fraction,
                 *args,
                 **kwargs):
         
