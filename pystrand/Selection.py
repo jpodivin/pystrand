@@ -7,12 +7,16 @@ class Selection(object):
     """
     _name = ""
     _rng = None
-    
-    def __init__(self, 
+
+    def __init__(self,
                 *args, 
                 **kwargs):
         self._name = kwargs.get("name", "Selection")
+        self._rng = np.random.default_rng()
+        """
         
+        """
+
     def __get_selected_population__(
         self, 
         selected_individuals, 
@@ -74,8 +78,7 @@ class RandomSelection(Selection):
                 *args,
                 **kwargs):
 
-        self._selection_prob = selection_prob
-        self._rng = np.random.default_rng()
+        self._selection_prob = selection_prob        
 
         super().__init__(args, kwargs)
 
@@ -102,14 +105,13 @@ class RouletteSelection(Selection):
 
     """
     _selected_population_fraction = 0
-
+    
     def __init__(self,
                 selected_population_fraction,
                 *args,
                 **kwargs):
         
         self._selected_population_fraction = selected_population_fraction
-        self._rng = np.random.default_rng()
 
         super().__init__(args, kwargs)
 

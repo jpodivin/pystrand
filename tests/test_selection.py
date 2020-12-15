@@ -1,5 +1,6 @@
 import unittest
-from pystrand import Selection, Population, RandomSelection, RouletteSelection
+import numpy as np
+from pystrand import Selection, Population, RandomSelection, RouletteSelection, Genotype
 
 class Dummy_Selection_Test(unittest.TestCase):
     test_population = Population(100, (100, 1))

@@ -1,4 +1,5 @@
 import numpy as np
+from copy import deepcopy
 from pystrand import Genotype
 
 class Population(object):
@@ -129,8 +130,22 @@ class Population(object):
     def retrieve_best(self, n = 1):
         """
         'n' individuals with highest value of fitness are retrieved.
+        Genotype objects don't support comparison, individuals can't be sorted directly.
         """
-        return np.sort(self._individuals, order='fitness')[:n]
+        indices = np.argsort(self._individuals['fitness'])[-n:]
+        return deepcopy(self._individuals[indices])
+
+    def append_individuals(self, new_individuals):
+        """
+        Appends array of 'new_individuals' to existing individuals managed by Population.
+
+        Raises:
+            TypeError if new_individuals isn't numpy array of required dtype.
+        """
+        if type(new_individuals) is not np.ndarray or new_individuals.dtype is not self._dtype:
+            raise TypeError()
+
+        self._individuals = np.append(self._individuals, new_individuals)
 
     #Properties for easier retrieval of frequently used values.
     @property
