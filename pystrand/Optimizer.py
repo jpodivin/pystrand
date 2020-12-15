@@ -119,19 +119,18 @@ class Optimizer(object):
             if self._population.max_fitness == 1.0:
                 break
             else:
-                self.select_genomes()
-
                 #After evaluation we keep n-best performers and don't alter them.
                 if self._elitism > 0.0:
                     best_performers = self._population.retrieve_best(self._elitism)
 
+                self.select_genomes()                
+                
                 self._population.mutate_genotypes(self._mutation_probability)
 
                 if self._crossover_probability > 0.0:
                     self._population.cross_genomes(
-                        crossover_prob = self._crossover_probability,
-                        secondary_population = self._population.individuals['genotype'])
-                
+                        crossover_prob = self._crossover_probability)
+
                 if best_performers.size > 0:
                     self._population.append_individuals(best_performers)
 

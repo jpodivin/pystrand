@@ -1,4 +1,5 @@
 import numpy as np
+from copy import deepcopy
 from pystrand import Genotype
 
 class Population(object):
@@ -129,10 +130,10 @@ class Population(object):
     def retrieve_best(self, n = 1):
         """
         'n' individuals with highest value of fitness are retrieved.
-        Genotype objects don't support comparasion, individuals can't be sorted directly.
+        Genotype objects don't support comparison, individuals can't be sorted directly.
         """
         indices = np.argsort(self._individuals['fitness'])[-n:]
-        return self._individuals[indices].copy()
+        return deepcopy(self._individuals[indices])
 
     def append_individuals(self, new_individuals):
         """
