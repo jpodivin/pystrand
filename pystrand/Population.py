@@ -133,7 +133,11 @@ class Population(object):
         Genotype objects don't support comparison, individuals can't be sorted directly.
         """
         indices = np.argsort(self._individuals['fitness'])[-n:]
-        return deepcopy(self._individuals[indices])
+        
+        #Ugly but it works. 
+        return np.array(
+            [(fitness, genotype.clone()) for fitness, genotype in self._individuals[indices]], 
+            dtype=self._dtype)
 
     def append_individuals(self, new_individuals):
         """

@@ -71,7 +71,7 @@ class Optimizer(object):
     
         for individual in evaluated_individuals:
             individual['fitness'] = self.evaluate_individual(
-                            individual['genotype'].genome
+                            individual['genotype']
                             )
             
         self._population.replace_individuals(evaluated_individuals)
