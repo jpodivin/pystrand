@@ -26,7 +26,7 @@ class Test_genotype_manipulation(unittest.TestCase):
         """
         for shape in self.test_shapes:
             genome = Genotype(shape)
-            self.assertTrue(np.array_equiv(genome.genome, np.zeros(shape)))
+            self.assertTrue(np.array_equiv(genome, np.zeros(shape)))
 
     def test_genotype_initiation_random(self):
         """
@@ -38,9 +38,9 @@ class Test_genotype_manipulation(unittest.TestCase):
                                 random_init = True,
                                 gene_vals = gene_vals)
 
-                self.assertTrue(genome.genome.max() <= gene_vals.max())
+                self.assertTrue(genome.max() <= gene_vals.max())
 
-                self.assertTrue(genome.genome.min() >= gene_vals.min())
+                self.assertTrue(genome.min() >= gene_vals.min())
 
     def test_genotype_mutation_bounds(self):
         """
@@ -56,11 +56,11 @@ class Test_genotype_manipulation(unittest.TestCase):
 
                 genome.mutate(1.0)
 
-                self.assertFalse(np.array_equiv(genome.genome, original_genome.genome))
+                self.assertFalse(np.array_equiv(genome, original_genome))
 
-                self.assertTrue(genome.genome.max() <= gene_vals.max())
+                self.assertTrue(genome.max() <= gene_vals.max())
 
-                self.assertTrue(genome.genome.min() >= gene_vals.min())
+                self.assertTrue(genome.min() >= gene_vals.min())
 
     def test_genotype_crossover_binary(self):
         
@@ -81,12 +81,12 @@ class Test_genotype_manipulation(unittest.TestCase):
             descendant_a = parent_a.crossover(parent_b, crossover_mask)
             descendant_b = parent_b.crossover(parent_a, crossover_mask)
 
-            self.assertFalse(np.array_equiv(descendant_b.genome, parent_a.genome))
-            self.assertFalse(np.array_equiv(descendant_a.genome, parent_b.genome))
+            self.assertFalse(np.array_equiv(descendant_b, parent_a))
+            self.assertFalse(np.array_equiv(descendant_a, parent_b))
 
             if mask_size > 1:
-                self.assertFalse(np.array_equiv(descendant_b.genome, parent_b.genome))
-                self.assertFalse(np.array_equiv(descendant_a.genome, parent_a.genome))
+                self.assertFalse(np.array_equiv(descendant_b, parent_b))
+                self.assertFalse(np.array_equiv(descendant_a, parent_a))
 
 if __name__ == '__main__':
     unittest.main()

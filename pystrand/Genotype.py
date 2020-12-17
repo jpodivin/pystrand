@@ -1,32 +1,38 @@
 import numpy as np
 
-class Genotype:
+class Genotype(np.ndarray):
 	"""
 	
 	"""
-	_genome = np.array([])
-	_gene_vals = np.array([])
-	_genotype_fitness = 0.0
+	def __new__(
+		cls, 
+		genome_shape, 
+		random_init = False,
+		gene_vals = [0, 1],
+		seed = 0,
+		default_genome = None,
+		*args, 
+		**kwargs):
 
-	def __init__(self, 
-			  genome_shape, 
-			  random_init = False,
-			  gene_vals = [0, 1],
-			  seed = 0,
-			  default_genome = None,
-			  *args, 
-			  **kwargs):
-
-		self._gene_vals = gene_vals
-		
 		if random_init:
-			self._genome = np.random.choice(self._gene_vals, genome_shape)
+			genome = np.random.choice(gene_vals, genome_shape)
 		elif default_genome is not None:
-			self._genome = default_genome
+			genome = default_genome
 		else:
-			self._genome = np.zeros(genome_shape)
+			genome = np.zeros(genome_shape)
 
-		super().__init__(*args, **kwargs)
+		genome = genome.view(cls)
+		genome._gene_vals = gene_vals
+
+		return genome
+	
+	def __array_finalized__(self, obj):
+
+		if obj is None:
+			return
+		
+		self._genotype_fitness = getattr(obj, 'genotype_fitness', 0.0)
+		self._gene_vals = getattr(obj, '_gene_vals', [0, 1])
 
 	def mutate(self, mutation_prob=0.01):
 		"""
@@ -37,11 +43,11 @@ class Genotype:
 			mutation_prob -- float in range [0, 1.0] inclusive.
 						 Other values result in error, or undefined behavior.
 		"""
-		if self._genome.size != 0:
+		if self.size != 0:
 			if np.random.random_sample() < mutation_prob:
-				position = np.random.choice(self._genome.size)
-				gene_vals_subset = np.setdiff1d(self._gene_vals, [self._genome.flat[position]])
-				self._genome.flat[position] = np.random.choice(gene_vals_subset)
+				position = np.random.choice(self.size)
+				gene_vals_subset = np.setdiff1d(self._gene_vals, [self.flat[position]])
+				self.flat[position] = np.random.choice(gene_vals_subset)
 
 	def crossover(self, partner_genotype, mask = None):
 		"""
@@ -55,13 +61,10 @@ class Genotype:
 			#Random mask is used if none defined. 
 			mask = np.ndarray(self.genotype_shape, dtype=bool)
 			
-		descendant_genome = np.copy(self._genome)
-		descendant_genome[mask] = partner_genotype.genome[mask]	
+		descendant_genome = self.clone()
+		descendant_genome[mask] = partner_genotype[mask]	
 
-		return Genotype(
-			self.genotype_shape,
-			gene_vals = self.gene_vals,
-			default_genome = descendant_genome)
+		return descendant_genome
 
 	def clone(self):
 		"""
@@ -72,15 +75,11 @@ class Genotype:
 		return Genotype(
 			self.genotype_shape, 
 			gene_vals = self.gene_vals,
-			default_genome = self.genome.copy())
+			default_genome = self.copy())
 
 	@property
 	def genotype_shape(self):
-		return self._genome.shape
-
-	@property
-	def genome(self):
-		return self._genome
+		return self.shape
 
 	@property
 	def gene_vals(self):
@@ -99,3 +98,4 @@ class Genotype:
 			raise TypeError()
 
 		self._genotype_fitness = new_fitness
+		

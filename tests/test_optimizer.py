@@ -33,8 +33,8 @@ class Optimizer_init_test(unittest.TestCase):
                 )
 
             population = Population(
-                pop_size = np.sum(target_genotype.genome.shape)*10, 
-                genome_shapes = target_genotype.genome.shape,
+                pop_size = np.sum(target_genotype.shape)*10, 
+                genome_shapes = target_genotype.shape,
                 gene_vals = target_genotype.gene_vals,
                 random_init = True
                 )
@@ -69,8 +69,8 @@ class Optimizer_init_test(unittest.TestCase):
                 )
 
             population = Population(
-                pop_size = np.sum(target_genotype.genome.shape)*10, 
-                genome_shapes = target_genotype.genome.shape,
+                pop_size = np.sum(target_genotype.shape)*10, 
+                genome_shapes = target_genotype.shape,
                 gene_vals = target_genotype.gene_vals,
                 random_init = True
                 )
@@ -193,7 +193,7 @@ class Optimizer_Run_test(unittest.TestCase):
         """      
         
         for target_genotype in target_genotypes_small[1:]:
-            
+        
             def fitness_fn(individual):
                 difference = np.sum(np.not_equal(individual, target_genotype))
                 return 1 - difference/individual.size
