@@ -80,7 +80,7 @@ class RandomSelection(Selection):
 
         self._selection_prob = selection_prob        
 
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
 
     def __select__(self, population):
 
@@ -104,7 +104,6 @@ class RouletteSelection(Selection):
     Checks for case of maximum fitness = 0 and assignes equal probability to all individuals.
 
     """
-    _selected_population_fraction = 0
     
     def __init__(self,
                 selected_population_fraction,
@@ -113,7 +112,7 @@ class RouletteSelection(Selection):
         
         self._selected_population_fraction = selected_population_fraction
 
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
 
     def __select__(self, population):
         selected_individuals = []
@@ -138,4 +137,28 @@ class RouletteSelection(Selection):
             population.gene_values,
             population._dtype
             )
-            
+
+class ElitismSelection(Selection):
+    """
+
+    """
+    def __init__(self,
+                selected_population_fraction,
+                *args,
+                **kwargs):
+                
+        self._selected_population_fraction = selected_population_fraction
+
+        super().__init__(*args, **kwargs)
+
+    def __select__(self, population):
+
+        n_selected = int(population.population_size*self._selected_population_fraction)
+
+        return self.__get_selected_population__(
+            population.retrieve_best(n_selected),
+            population.population_size,
+            population.genome_shapes, 
+            population.gene_values,
+            population.individuals.dtype
+            )
