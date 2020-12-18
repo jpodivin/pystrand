@@ -12,8 +12,14 @@ class Dummy_Selection_Test(unittest.TestCase):
     def test_selection(self):
         selection = Selection()
         
-        selected_population = selection.__select__(self.test_population)
+        selected_population = selection.select(self.test_population)
 
+        selected_population = Population( 
+                self.test_population.population_size, 
+                self.test_population.genome_shapes, 
+                self.test_population.gene_values,
+                seed_individuals = selected_population
+                )
         self.assertEqual(
             selected_population.population_size, 
             self.test_population.population_size
@@ -31,8 +37,15 @@ class Random_Selection_Test(unittest.TestCase):
     def test_selection(self):
         for selection_probability in self.selection_probabilities:
             selection = RandomSelection(selection_probability)
-            selected_population = selection.__select__(self.test_population)
+            selected_population = selection.select(self.test_population)
             
+            selected_population = Population( 
+                self.test_population.population_size, 
+                self.test_population.genome_shapes, 
+                self.test_population.gene_values,
+                seed_individuals = selected_population
+                )
+
             self.assertNotEqual(
                 selected_population.population_size,
                 self.test_population.population_size
@@ -57,8 +70,14 @@ class Roulette_Selection_Test(unittest.TestCase):
     def test_selection_unevaluated(self):
         for population_fraction in self.population_fractions:
             selection = RouletteSelection(population_fraction)
-            selected_population = selection.__select__(self.test_population)
-            
+            selected_population = selection.select(self.test_population)
+            selected_population = Population( 
+                self.test_population.population_size, 
+                self.test_population.genome_shapes, 
+                self.test_population.gene_values,
+                seed_individuals = selected_population
+                )
+
             self.assertNotEqual(
                 selected_population.population_size,
                 self.test_population.population_size
@@ -86,7 +105,13 @@ class Roulette_Selection_Test(unittest.TestCase):
 
                 selection = RouletteSelection(population_fraction)
 
-                selected_population = selection.__select__(self.test_population)
+                selected_population = selection.select(self.test_population)
+                selected_population = Population( 
+                    self.test_population.population_size, 
+                    self.test_population.genome_shapes, 
+                    self.test_population.gene_values,
+                    seed_individuals = selected_population
+                    )
 
                 self.assertNotEqual(
                     selected_population.population_size,
@@ -116,8 +141,14 @@ class Elitism_Selection_Test(unittest.TestCase):
     def test_selection_unevaluated(self):
         for population_fraction in self.population_fractions:
             selection = ElitismSelection(population_fraction)
-            selected_population = selection.__select__(self.test_population)
-            
+            selected_population = selection.select(self.test_population)
+            selected_population = Population( 
+                    self.test_population.population_size, 
+                    self.test_population.genome_shapes, 
+                    self.test_population.gene_values,
+                    seed_individuals = selected_population
+                    )
+
             self.assertNotEqual(
                 selected_population.population_size,
                 self.test_population.population_size
@@ -145,7 +176,13 @@ class Elitism_Selection_Test(unittest.TestCase):
 
                 selection = ElitismSelection(population_fraction)
 
-                selected_population = selection.__select__(self.test_population)
+                selected_population = selection.select(self.test_population)
+                selected_population = Population( 
+                    self.test_population.population_size, 
+                    self.test_population.genome_shapes, 
+                    self.test_population.gene_values,
+                    seed_individuals = selected_population
+                    )
 
                 self.assertNotEqual(
                     selected_population.population_size,

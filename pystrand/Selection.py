@@ -53,17 +53,14 @@ class Selection(object):
         for fitness, individual in population.individuals:        
             selected_individuals.append((fitness, individual))
 
-        return self.__get_selected_population__(
-            selected_individuals, 
-            population.population_size, 
-            population.genome_shapes, 
-            population.gene_values,
-            population.individuals.dtype
-            )
+        return selected_individuals
             
     def select(self, population):
 
-        return self.__select__(population)
+        return np.array(
+            self.__select__(population),
+            dtype=population.individuals.dtype            
+            )
 
 class RandomSelection(Selection):
     """
@@ -90,13 +87,7 @@ class RandomSelection(Selection):
             if self._rng.random() < self._selection_prob:
                 selected_individuals.append((fitness, individual))
 
-        return self.__get_selected_population__(
-            selected_individuals, 
-            population.population_size, 
-            population.genome_shapes, 
-            population.gene_values,
-            population.individuals.dtype
-            )
+        return selected_individuals
 
 class RouletteSelection(Selection):
     """
@@ -130,13 +121,7 @@ class RouletteSelection(Selection):
                 size = n_selected,
                 p = probs)
                 
-        return self.__get_selected_population__(
-            selected_individuals, 
-            population.population_size, 
-            population.genome_shapes, 
-            population.gene_values,
-            population._dtype
-            )
+        return selected_individuals
 
 class ElitismSelection(Selection):
     """
@@ -152,13 +137,10 @@ class ElitismSelection(Selection):
         super().__init__(*args, **kwargs)
 
     def __select__(self, population):
-
         n_selected = int(population.population_size*self._selected_population_fraction)
+        selected_individuals = population.retrieve_best(n_selected)
 
-        return self.__get_selected_population__(
-            population.retrieve_best(n_selected),
-            population.population_size,
-            population.genome_shapes, 
-            population.gene_values,
-            population.individuals.dtype
-            )
+        for individual in selected_individuals['genotype']:
+            individual._protected = True
+        
+        return selected_individuals
