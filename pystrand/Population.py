@@ -110,7 +110,8 @@ class Population(object):
         Applies mutation operator to individuals with given probability.
         """
         for genotype in self._individuals['genotype']:
-            genotype.mutate(mutation_prob)
+            if not genotype._protected:
+                genotype.mutate(mutation_prob)
 
     def cross_genomes(self, 
         secondary_population = None, 

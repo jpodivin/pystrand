@@ -1,5 +1,5 @@
 import numpy as np
-from pystrand import Genotype, Population, RouletteSelection, Selection
+from pystrand import Genotype, Population, RouletteSelection, ElitismSelection, Selection
 
 class Optimizer(object):
     """Base optimizer class.
@@ -12,8 +12,7 @@ class Optimizer(object):
     _fitness_function = lambda x: 0.0
     _mutation_probability = 0.0
     _crossover_probability = 0.0
-    _selection_method = None
-    _elitism = 0
+    _selection_methods = None
 
     def __init__(self, 
                  fitness_function, 
@@ -21,7 +20,7 @@ class Optimizer(object):
                  population,
                  mutation_prob = 0.001,
                  crossover_prob = 0.0,
-                 selection_method = 'roulette',
+                 selection_methods = 'roulette',
                  selected_fraction = 0.1,                 
                  outfile='', 
                  *args, 
@@ -33,34 +32,48 @@ class Optimizer(object):
             population -- Seed population, can include known sub-optimal solutions.
             mutation_prob -- 0.001 by default
             crossover_prob -- 0.0 by default, no crossover will take place
-            selection_method -- 
-            selected_fraction --            
+            selection_methods -- 
+            selected_fraction -- 
             outfile --
         Raises:
-
+            TypeError:
         """
         self._fitness_function = fitness_function
         self._mutation_probability = mutation_prob
-        self._crossover_probability = crossover_prob
-        
-        if type(selection_method) is str:
-            if selection_method == 'roulette':
-                self._selection_method = RouletteSelection(selected_fraction)
-        elif type(selection_method) is Selection:
-            self._selection_method = selection_method
-        else:
-            raise TypeError(
-                'Invalid selection type.',
-                type(selection_method)
-                )
+        self._crossover_probability = crossover_prob 
+        self._selection_methods = []
+        #First we turn selection_methods into list, in case it isn't.
+        if type(selection_methods) is not list:
+            selection_methods = [selection_methods]        
+        """        
+        For each element in list of sleection methods we check the type.
+        Only Selection and string are accepted, other types raise TypeError.
+        The strings must be reckognized as names of algorithm, 
+        any other string will result in ValueError.
+        """
+
+        for selection_method in selection_methods:
+            if type(selection_method) is str:
+                if selection_method == 'roulette':
+                    self._selection_methods += [RouletteSelection(selected_fraction)]
+                elif selection_method == 'elitism':
+                    self._selection_methods += [ElitismSelection(selected_fraction)]
+                else:
+                    raise ValueError(
+                    'Unknown selection algorithm name.',
+                    selection_method
+                    )
+            elif type(selection_method) is Selection:
+                self._selection_methods += [selection_method]
+            else:
+                raise TypeError(
+                    'Invalid selection type.',
+                    type(selection_method)
+                    )
 
         self._population = population 
 
-        self._max_iterations = max_iterations
-        
-        self._elitism = int(
-            kwargs.get('elitism', 0.0) * population.population_size
-            )
+        self._max_iterations = max_iterations     
 
     def evaluate_individual(self, individual):
         
@@ -77,12 +90,21 @@ class Optimizer(object):
         self._population.replace_individuals(evaluated_individuals)
 
     def select_genomes(self):
-        new_population = self._selection_method.select(self._population)
+        
+        new_population = Population(
+            0, 
+            self._population.genome_shapes,
+            self._population.gene_values)
+
+        for selection_method in self._selection_methods:
+            new_population.append_individuals(
+                selection_method.select(self._population)
+                )
 
         new_population.expand_population(
-            self._population.population_size-self._elitism
+            self._population.population_size
             )
-        
+     
         self._population = new_population
 
     def fit(self, verbose = 1):
@@ -118,11 +140,7 @@ class Optimizer(object):
 
             if self._population.max_fitness == 1.0:
                 break
-            else:
-                #After evaluation we keep n-best performers and don't alter them.
-                if self._elitism > 0.0:
-                    best_performers = self._population.retrieve_best(self._elitism)
-
+            else: 
                 self.select_genomes()                
                 
                 self._population.mutate_genotypes(self._mutation_probability)

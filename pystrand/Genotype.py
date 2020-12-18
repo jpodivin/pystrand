@@ -11,6 +11,7 @@ class Genotype(np.ndarray):
 		gene_vals = [0, 1],
 		seed = 0,
 		default_genome = None,
+		protected = False,
 		*args, 
 		**kwargs):
 
@@ -23,6 +24,7 @@ class Genotype(np.ndarray):
 
 		genome = genome.view(cls)
 		genome._gene_vals = gene_vals
+		genome._protected = protected
 
 		return genome
 	
@@ -33,7 +35,8 @@ class Genotype(np.ndarray):
 		
 		self._genotype_fitness = getattr(obj, 'genotype_fitness', 0.0)
 		self._gene_vals = getattr(obj, '_gene_vals', [0, 1])
-
+		self._protected = getattr(obj, '_protected', False)
+		
 	def mutate(self, mutation_prob=0.01):
 		"""
 		Alters one gene (symbol) with given probability.
