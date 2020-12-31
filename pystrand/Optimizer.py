@@ -1,4 +1,5 @@
 import numpy as np
+import multiprocessing as mp
 from pystrand import Genotype, Population, RouletteSelection, ElitismSelection, Selection
 
 class Optimizer(object):
@@ -21,8 +22,9 @@ class Optimizer(object):
                  mutation_prob = 0.001,
                  crossover_prob = 0.0,
                  selection_methods = 'roulette',
-                 selected_fraction = 0.1,                 
+                 selected_fraction = 0.1,
                  outfile='', 
+                 parallelize = False,
                  *args, 
                  **kwargs):
         """
@@ -42,6 +44,8 @@ class Optimizer(object):
         self._mutation_probability = mutation_prob
         self._crossover_probability = crossover_prob 
         self._selection_methods = []
+        self._parallelize = parallelize
+        
         #First we turn selection_methods into list, in case it isn't.
         if type(selection_methods) is not list:
             selection_methods = [selection_methods]        
@@ -80,17 +84,23 @@ class Optimizer(object):
         return self._fitness_function(individual)
 
     def evaluate_population(self):
+        
         evaluated_individuals = self._population.individuals
-    
-        for individual in evaluated_individuals:
-            individual['fitness'] = self.evaluate_individual(
-                            individual['genotype']
-                            )
-            
+        if self._parallelize:
+            with mp.Pool() as worker_pool:
+                evaluated_individuals['fitness'] = worker_pool.map(
+                    self._fitness_function,
+                    evaluated_individuals['genotype'])
+        else:
+            evaluated_individuals['fitness'] = [
+                self._fitness_function(individual) 
+                for individual 
+                in evaluated_individuals['genotype']
+                ]
+
         self._population.replace_individuals(evaluated_individuals)
 
     def select_genomes(self):
-        
         new_population = Population(
             0, 
             self._population.genome_shapes,
@@ -122,7 +132,6 @@ class Optimizer(object):
         t = 0
         
         best_performers = np.array([])
-
         while t < self._max_iterations:
             self.evaluate_population()
 
@@ -147,11 +156,12 @@ class Optimizer(object):
 
                 if self._crossover_probability > 0.0:
                     self._population.cross_genomes(
-                        crossover_prob = self._crossover_probability)
+                        crossover_prob = self._crossover_probability
+                        )
 
                 if best_performers.size > 0:
                     self._population.append_individuals(best_performers)
 
             t += 1
-
+            
         return history
