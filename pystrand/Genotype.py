@@ -36,7 +36,20 @@ class Genotype(np.ndarray):
 		self._genotype_fitness = getattr(obj, 'genotype_fitness', 0.0)
 		self._gene_vals = getattr(obj, '_gene_vals', [0, 1])
 		self._protected = getattr(obj, '_protected', False)
+	
+	def __reduce__(self):
+
+		pickled_genotype = super(Genotype, self).__reduce__()
+		genotype_state = pickled_genotype[2] + (self._gene_vals, self._protected)
+
+		return (pickled_genotype[0], pickled_genotype[1], genotype_state)
+
+	def __setstate__(self, state):
+		self._gene_vals = state[-2]
+		self._protected = state[-1]
 		
+		super(Genotype, self).__setstate__(state[:-2])
+
 	def mutate(self, mutation_prob=0.01):
 		"""
 		Alters one gene (symbol) with given probability.
