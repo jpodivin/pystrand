@@ -1,32 +1,30 @@
 import numpy as np
-from pystrand import Genotype, Population
+from pystrand import Population
 
-class Selection(object):
+class Selection:
     """
     Base selection class.
     """
-    _name = ""
-    _rng = None
-
-    def __init__(self,
-                *args, 
-                **kwargs):
+    def __init__(
+            self,
+            *args,
+            **kwargs):
         self._name = kwargs.get("name", "Selection")
         self._rng = np.random.default_rng()
         """
-        
+
         """
 
     def __get_selected_population__(
-        self, 
-        selected_individuals, 
-        population_size, 
-        genome_shapes, 
-        gene_values,
-        individual_dtype):
+            self,
+            selected_individuals,
+            population_size,
+            genome_shapes,
+            gene_values,
+            individual_dtype):
         """
-        Creates new Population object from selected_individuals. 
-        
+        Creates new Population object from selected_individuals.
+
         Arguments:
             selected_individuals -- seed individuals forming the population
             population_size -- number of individuals in given population
@@ -36,46 +34,45 @@ class Selection(object):
         """
         selected_individuals = np.array(
             selected_individuals,
-            dtype=individual_dtype            
+            dtype=individual_dtype
             ).flatten()
 
         selected_population = Population(
-            population_size, 
+            population_size,
             genome_shapes,
-            gene_vals = gene_values,
-            seed_individuals = selected_individuals)
+            gene_vals=gene_values,
+            seed_individuals=selected_individuals)
 
         return selected_population
 
     def __select__(self, population):
         selected_individuals = []
 
-        for fitness, individual in population.individuals:        
+        for fitness, individual in population.individuals:
             selected_individuals.append((fitness, individual))
 
         return selected_individuals
-            
+
     def select(self, population):
 
         return np.array(
             self.__select__(population),
-            dtype=population.individuals.dtype            
+            dtype=population.individuals.dtype
             )
 
 class RandomSelection(Selection):
     """
     Randomly selects a fraction of individuals in given population.
-    The selection probability is given as argument.     
+    The selection probability is given as argument.
     """
 
-    _selection_prob = 0.0    
+    def __init__(
+            self,
+            selection_prob,
+            *args,
+            **kwargs):
 
-    def __init__(self,
-                selection_prob,
-                *args,
-                **kwargs):
-
-        self._selection_prob = selection_prob        
+        self._selection_prob = selection_prob
 
         super().__init__(*args, **kwargs)
 
@@ -95,18 +92,18 @@ class RouletteSelection(Selection):
     Checks for case of maximum fitness = 0 and assignes equal probability to all individuals.
 
     """
-    
-    def __init__(self,
-                selected_population_fraction,
-                *args,
-                **kwargs):
-        
+
+    def __init__(
+            self,
+            selected_population_fraction,
+            *args,
+            **kwargs):
+
         self._selected_population_fraction = selected_population_fraction
 
         super().__init__(*args, **kwargs)
 
     def __select__(self, population):
-        selected_individuals = []
         n_selected = int(population.population_size*self._selected_population_fraction)
         probs = population.individuals["fitness"]
 
@@ -117,21 +114,22 @@ class RouletteSelection(Selection):
             probs = np.full(probs.shape, 1.0/probs.size)
 
         selected_individuals = self._rng.choice(
-                population.individuals, 
-                size = n_selected,
-                p = probs)
-                
+            population.individuals,
+            size=n_selected,
+            p=probs)
+
         return selected_individuals
 
 class ElitismSelection(Selection):
     """
 
     """
-    def __init__(self,
-                selected_population_fraction,
-                *args,
-                **kwargs):
-                
+    def __init__(
+            self,
+            selected_population_fraction,
+            *args,
+            **kwargs):
+
         self._selected_population_fraction = selected_population_fraction
 
         super().__init__(*args, **kwargs)
@@ -141,6 +139,6 @@ class ElitismSelection(Selection):
         selected_individuals = population.retrieve_best(n_selected)
 
         for individual in selected_individuals['genotype']:
-            individual._protected = True
-        
+            individual.protected = True
+
         return selected_individuals
