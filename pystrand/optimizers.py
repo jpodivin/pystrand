@@ -1,6 +1,8 @@
 import numpy as np
 import multiprocessing as mp
-from pystrand import Genotype, Population, RouletteSelection, ElitismSelection, Selection
+from pystrand.genotypes import Genotype
+from pystrand.populations import BasePopulation
+from pystrand.selections import RouletteSelection, ElitismSelection, BaseSelection
 
 class Optimizer:
     """Base optimizer class.
@@ -63,7 +65,7 @@ class Optimizer:
                         'Unknown selection algorithm name.',
                         selection_method
                     )
-            elif isinstance(selection_method, Selection):
+            elif isinstance(selection_method, BaseSelection):
                 self._selection_methods += [selection_method]
             else:
                 raise TypeError(
@@ -94,7 +96,7 @@ class Optimizer:
         self._population.replace_individuals(evaluated_individuals)
 
     def select_genomes(self):
-        new_population = Population(
+        new_population = BasePopulation(
             0,
             self._population.genome_shapes,
             self._population.gene_values)
