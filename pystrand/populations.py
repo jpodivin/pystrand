@@ -1,3 +1,4 @@
+from copy import deepcopy
 import numpy as np
 from pystrand.genotypes import Genotype
 
@@ -90,11 +91,15 @@ class BasePopulation:
                     The 'clone' strategy selects random existing individuals,
                     while the 'random' strategy generates new ones.
         """
+        size_difference = target_pop_size-self.population_size
+        
         if strategy == 'clone':
-            self._individuals = np.random.choice(self._individuals, target_pop_size)
-
-        elif strategy == 'random':
-            size_difference = target_pop_size-self.population_size
+            new_individuals = np.random.choice(self._individuals, size_difference)
+            for individual in new_individuals:
+                individual['genotype'] = individual['genotype'].clone()
+                individual['genotype'].protected = False
+                
+        elif strategy == 'random':            
             new_individuals = []
             for _ in range(size_difference):
                 new_individuals += [(
@@ -112,12 +117,13 @@ class BasePopulation:
                 new_individuals,
                 dtype=self._dtype)
 
-            self._individuals = np.append(self._individuals, new_individuals)
+        self._individuals = np.append(self._individuals, new_individuals)
 
     def mutate_genotypes(self, mutation_prob=0.01):
         """
         Applies mutation operator to individuals with given probability.
         """
+      
         for genotype in self._individuals['genotype']:
             if not genotype.protected:
                 genotype.mutate(mutation_prob)
@@ -135,8 +141,9 @@ class BasePopulation:
         if secondary_population is None:
             secondary_population = self._individuals['genotype']
         for individual in self._individuals['genotype']:
-            if np.random.random_sample(1) < crossover_prob:
-                individual.crossover(np.random.choice(secondary_population))
+            if not individual.protected: 
+                if np.random.random_sample(1) < crossover_prob:
+                    individual = individual.crossover(np.random.choice(secondary_population))
 
     def retrieve_best(self, size=1):
         """

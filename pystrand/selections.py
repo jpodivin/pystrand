@@ -106,7 +106,8 @@ class RouletteSelection(BaseSelection):
     def __select__(self, population):
         n_selected = int(population.population_size*self._selected_population_fraction)
         probs = population.individuals["fitness"]
-
+        if probs.min() < 0.0:
+            probs = probs - probs.min()
         if probs.max() > 0.0:
             scaling = lambda x: x / np.sum(probs)
             probs = np.apply_along_axis(scaling, 0, probs)

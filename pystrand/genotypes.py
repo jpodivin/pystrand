@@ -35,7 +35,7 @@ class Genotype(np.ndarray):
         self._genotype_fitness = getattr(obj, 'genotype_fitness', 0.0)
         self._gene_vals = getattr(obj, '_gene_vals', [0, 1])
         self._protected = getattr(obj, '_protected', False)
-
+    
     def __reduce__(self):
 
         pickled_genotype = super(Genotype, self).__reduce__()
