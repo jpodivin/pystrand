@@ -1,7 +1,7 @@
 import numpy as np
-from pystrand import Genotype
+from pystrand.genotypes import Genotype
 
-class Population:
+class BasePopulation:
     """
     Collection of individual genotypes.
     Provides facilities for working with multiple genotypes at the same time.

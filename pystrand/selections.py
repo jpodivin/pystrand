@@ -1,7 +1,7 @@
 import numpy as np
-from pystrand import Population
+from pystrand.populations import BasePopulation
 
-class Selection:
+class BaseSelection:
     """
     Base selection class.
     """
@@ -37,7 +37,7 @@ class Selection:
             dtype=individual_dtype
             ).flatten()
 
-        selected_population = Population(
+        selected_population = BasePopulation(
             population_size,
             genome_shapes,
             gene_vals=gene_values,
@@ -60,7 +60,7 @@ class Selection:
             dtype=population.individuals.dtype
             )
 
-class RandomSelection(Selection):
+class RandomSelection(BaseSelection):
     """
     Randomly selects a fraction of individuals in given population.
     The selection probability is given as argument.
@@ -86,7 +86,7 @@ class RandomSelection(Selection):
 
         return selected_individuals
 
-class RouletteSelection(Selection):
+class RouletteSelection(BaseSelection):
     """
     Naive implementation of Roulette selection (or Fitness proportionate selection).
     Checks for case of maximum fitness = 0 and assignes equal probability to all individuals.
@@ -120,7 +120,7 @@ class RouletteSelection(Selection):
 
         return selected_individuals
 
-class ElitismSelection(Selection):
+class ElitismSelection(BaseSelection):
     """
 
     """
