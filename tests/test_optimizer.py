@@ -1,4 +1,6 @@
-from pystrand import Optimizer, Genotype, Population
+from pystrand.optimizers import Optimizer
+from pystrand.genotypes import Genotype
+from pystrand.populations import BasePopulation
 import unittest
 import numpy as np
 
@@ -52,7 +54,7 @@ class Optimizer_init_test(unittest.TestCase):
                 default_genome=target_genotype
                 )
 
-            population = Population(
+            population = BasePopulation(
                 pop_size = np.sum(target_genotype.shape)*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = target_genotype.gene_vals,
@@ -85,7 +87,7 @@ class Optimizer_init_test(unittest.TestCase):
                 default_genome=target_genotype
                 )
 
-            population = Population(
+            population = BasePopulation(
                 pop_size = np.sum(target_genotype.shape)*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = target_genotype.gene_vals,
@@ -129,7 +131,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
         for target_genotype in target_genotypes_small:            
             
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = np.sum(target_genotype.shape)*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -167,7 +169,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
         for target_genotype in target_genotypes_large:
 
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = np.sum(target_genotype.shape)*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -206,7 +208,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
         for target_genotype in target_genotypes_small[1:]:        
 
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = target_genotype.size*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -243,7 +245,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
         for target_genotype in target_genotypes_large[1:]:
 
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = target_genotype.size*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -281,7 +283,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
         for target_genotype in target_genotypes_small[1:]:
 
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = target_genotype.size*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -319,7 +321,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
         for target_genotype in target_genotypes_large[1:]:
             
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = target_genotype.size*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -368,7 +370,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
         for target_genotype in target_genotypes_small:            
             
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = np.sum(target_genotype.shape)*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -407,7 +409,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
         for target_genotype in target_genotypes_large:
             
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = np.sum(target_genotype.shape)*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -447,7 +449,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
         for target_genotype in target_genotypes_small[1:]:
         
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = target_genotype.size*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -486,7 +488,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
         for target_genotype in target_genotypes_large[1:]:            
             
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = target_genotype.size*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -525,7 +527,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
         for target_genotype in target_genotypes_small[1:]:        
            
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = target_genotype.size*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
@@ -564,7 +566,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
         for target_genotype in target_genotypes_large[1:]:
            
             fitness_fn = FitnessFn(target_genotype)
-            population = Population(
+            population = BasePopulation(
                 pop_size = target_genotype.size*10, 
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),

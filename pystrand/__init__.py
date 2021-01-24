@@ -3,7 +3,10 @@
 import numpy as np
 
 #Files
-from pystrand.Genotype import *
-from pystrand.Population import *
-from pystrand.Selection import *
-from pystrand.Optimizer import *
+from pystrand import genotypes, optimizers, populations, selections
+# from pystrand.genotypes import *
+# from pystrand.populations import *
+# from pystrand.selections import *
+# from pystrand.optimizers import *
+
+__all__ = ['genotypes', 'optimizers', 'populations', 'selections']
