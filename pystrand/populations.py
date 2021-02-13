@@ -1,11 +1,24 @@
-from copy import deepcopy
 import numpy as np
 from pystrand.genotypes import Genotype
+from pystrand.mutations import PointMutation
 
 class BasePopulation:
     """
     Collection of individual genotypes.
     Provides facilities for working with multiple genotypes at the same time.
+
+    Parameters
+    ----------
+        pop_size : number of individuals in given population
+        genome_shapes : shapes of individual genomes as numpy arrays
+        random_init : if the genomes are supposed to be randomized
+        gene_vals : possible values of genes for given population
+        seed :
+        default_genome : used as genome for entire population,
+                            if random_init = False
+        seed_individuals : numpy array of evaluated inidividuals
+        individual_dtype : numpy dtype defined by Population class
+
     """
 
     def __init__(self,
@@ -18,18 +31,6 @@ class BasePopulation:
                  seed_individuals=None,
                  **kwargs):
         """
-
-        Arguments:
-        pop_size -- number of individuals in given population
-        genome_shapes -- shapes of individual genomes as numpy arrays
-        random_init -- if the genomes are supposed to be randomized
-        gene_vals -- possible values of genes for given population
-        seed --
-        default_genome -- used as genome for entire population,
-                          if random_init = False
-        seed_individuals -- numpy array of evaluated inidividuals
-        individual_dtype -- numpy dtype defined by Population class
-
         New individuals are not generated if seed_individuals isn't None.
         """
         self._dtype = np.dtype([('fitness', 'd'), ('genotype', 'O')])
@@ -83,50 +84,51 @@ class BasePopulation:
         """
         Increases number of indivuals in given population.
 
-        Arguments:
-
-        target_pop_size -- number of individuals we want in population.
-        strategy -- how are the new individuals created.
+        Parameters
+        ----------
+        target_pop_size : number of individuals we want in population.
+        strategy : how are the new individuals created.
                     Two available options are 'clone' and 'random'.
                     The 'clone' strategy selects random existing individuals,
                     while the 'random' strategy generates new ones.
         """
         size_difference = target_pop_size-self.population_size
-        
+
         if strategy == 'clone':
             new_individuals = np.random.choice(self._individuals, size_difference)
             for individual in new_individuals:
                 individual['genotype'] = individual['genotype'].clone()
                 individual['genotype'].protected = False
-                
-        elif strategy == 'random':            
+
+        elif strategy == 'random':
             new_individuals = []
             for _ in range(size_difference):
-                new_individuals += [(
-                    0.0,
-                    Genotype(
-                        self.genome_shapes[0],
-                        self._random_init,
-                        self._gene_values,
-                        self._seed,
-                        self._default_genome
-                        )
-                    )]
-                    
+                new_individuals += [
+                    (
+                        0.0,
+                        Genotype(
+                            self.genome_shapes[0],
+                            self._random_init,
+                            self._gene_values,
+                            self._seed,
+                            self._default_genome
+                            )
+                        )]
+
             new_individuals = np.array(
                 new_individuals,
                 dtype=self._dtype)
 
         self._individuals = np.append(self._individuals, new_individuals)
 
-    def mutate_genotypes(self, mutation_prob=0.01):
+    def mutate_genotypes(self, mutation_op=PointMutation(0.01)):
         """
         Applies mutation operator to individuals with given probability.
         """
-      
+
         for genotype in self._individuals['genotype']:
             if not genotype.protected:
-                genotype.mutate(mutation_prob)
+                genotype.mutate(mutation_op)
 
     def cross_genomes(
             self,
@@ -134,14 +136,16 @@ class BasePopulation:
             crossover_prob=0.0):
         """
         Crosses genomes of inidividuals with those in 'secondary_population'.
-        Arguments:
-            secondary_population --
-            crossover_prob --
+
+        Parameters
+        ----------
+            secondary_population :
+            crossover_prob :
         """
         if secondary_population is None:
             secondary_population = self._individuals['genotype']
         for individual in self._individuals['genotype']:
-            if not individual.protected: 
+            if not individual.protected:
                 if np.random.random_sample(1) < crossover_prob:
                     individual = individual.crossover(np.random.choice(secondary_population))
 
@@ -164,7 +168,7 @@ class BasePopulation:
         Raises:
             TypeError if new_individuals isn't numpy array of required dtype.
         """
-        if not isinstance(new_individuals, np.ndarray) or  new_individuals.dtype.type is not self._dtype.type:
+        if not isinstance(new_individuals, np.ndarray) or new_individuals.dtype.type is not self._dtype.type:
             raise TypeError()
 
         self._individuals = np.append(self._individuals, new_individuals)

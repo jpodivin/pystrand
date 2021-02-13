@@ -11,9 +11,6 @@ class BaseSelection:
             **kwargs):
         self._name = kwargs.get("name", "Selection")
         self._rng = np.random.default_rng()
-        """
-
-        """
 
     def __get_selected_population__(
             self,
@@ -25,12 +22,13 @@ class BaseSelection:
         """
         Creates new Population object from selected_individuals.
 
-        Arguments:
-            selected_individuals -- seed individuals forming the population
-            population_size -- number of individuals in given population
-            genome_shapes -- shapes of individual genomes as numpy arrays
-            gene_values -- possible values of genes for given population
-            individual_dtype -- numpy dtype defined by Population class
+        Parameters
+        ----------
+            selected_individuals : seed individuals forming the population
+            population_size : number of individuals in given population
+            genome_shapes : shapes of individual genomes as numpy arrays
+            gene_values : possible values of genes for given population
+            individual_dtype : numpy dtype defined by Population class
         """
         selected_individuals = np.array(
             selected_individuals,
@@ -91,6 +89,9 @@ class RouletteSelection(BaseSelection):
     Naive implementation of Roulette selection (or Fitness proportionate selection).
     Checks for case of maximum fitness = 0 and assignes equal probability to all individuals.
 
+    Parameters
+    ----------
+        selected_population_fraction : float, required
     """
 
     def __init__(
@@ -124,6 +125,9 @@ class RouletteSelection(BaseSelection):
 class ElitismSelection(BaseSelection):
     """
 
+    Parameters
+    ----------
+        selected_population_fraction : float, required
     """
     def __init__(
             self,

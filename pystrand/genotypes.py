@@ -1,4 +1,5 @@
 import numpy as np
+from pystrand.mutations import PointMutation
 
 class Genotype(np.ndarray):
     """
@@ -35,7 +36,7 @@ class Genotype(np.ndarray):
         self._genotype_fitness = getattr(obj, 'genotype_fitness', 0.0)
         self._gene_vals = getattr(obj, '_gene_vals', [0, 1])
         self._protected = getattr(obj, '_protected', False)
-    
+
     def __reduce__(self):
 
         pickled_genotype = super(Genotype, self).__reduce__()
@@ -49,26 +50,24 @@ class Genotype(np.ndarray):
 
         super(Genotype, self).__setstate__(state[:-2])
 
-    def mutate(self, mutation_prob=0.01):
+    def mutate(self, mutation_op=PointMutation(0.01)):
         """
         Alters one gene (symbol) with given probability.
         New symbol is selected from subset of _gene_vals.
 
-        Arguments:
-            mutation_prob -- float in range [0, 1.0] inclusive.
+        Parameters
+        ----------
+            mutation_op : float in range [0, 1.0] inclusive.
                         Other values result in error, or undefined behavior.
         """
-        if self.size != 0:
-            if np.random.random_sample() < mutation_prob:
-                position = np.random.choice(self.size)
-                gene_vals_subset = np.setdiff1d(self._gene_vals, [self.flat[position]])
-                self.flat[position] = np.random.choice(gene_vals_subset)
+        mutation_op(self)
 
     def crossover(self, partner_genotype, mask=None):
         """
-        Arguments:
-            partner_genotype --
-            mask -- determines which genes (symbols) are selected from parents.
+        Parameters
+        ----------
+            partner_genotype :
+            mask : determines which genes (symbols) are selected from parents.
                     If left as 'None' the mask is randomized each time.
                     Thus impacting performance.
         """
