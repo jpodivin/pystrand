@@ -51,13 +51,13 @@ class BasePopulation:
                 [
                     (
                         0.0,
-                    Genotype(
-                        shape,
-                        random_init,
-                        gene_vals,
-                        seed,
-                        default_genome
-                        ))
+                        Genotype(
+                            shape,
+                            random_init,
+                            gene_vals,
+                            seed,
+                            default_genome
+                            ))
                     for shape, i in zip(self._genome_shapes, range(pop_size))],
                 dtype=self._dtype)
 
