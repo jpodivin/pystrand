@@ -9,18 +9,22 @@ class Genotype(np.ndarray):
             cls,
             genome_shape,
             random_init=False,
-            gene_vals=[0, 1],
+            gene_vals=None,
             seed=0,
             default_genome=None,
             protected=False,
             **kwargs):
 
         if random_init:
-            genome = np.random.choice(gene_vals, genome_shape)
+            random_generator = np.random.default_rng(seed=seed)
+            genome = random_generator.choice(gene_vals, genome_shape)
         elif default_genome is not None:
             genome = default_genome
         else:
             genome = np.zeros(genome_shape)
+
+        if gene_vals is None:
+            gene_vals = [0, 1]
 
         genome = genome.view(cls)
         genome._gene_vals = gene_vals
@@ -55,19 +59,17 @@ class Genotype(np.ndarray):
         Alters one gene (symbol) with given probability.
         New symbol is selected from subset of _gene_vals.
 
-        Parameters
-        ----------
-            mutation_op : float in range [0, 1.0] inclusive.
+        Arguments:
+            mutation_op -- float in range [0, 1.0] inclusive.
                         Other values result in error, or undefined behavior.
         """
         mutation_op(self)
 
     def crossover(self, partner_genotype, mask=None):
         """
-        Parameters
-        ----------
-            partner_genotype :
-            mask : determines which genes (symbols) are selected from parents.
+        Arguments:
+            partner_genotype --
+            mask -- determines which genes (symbols) are selected from parents.
                     If left as 'None' the mask is randomized each time.
                     Thus impacting performance.
         """
