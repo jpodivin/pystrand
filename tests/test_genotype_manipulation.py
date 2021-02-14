@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 from pystrand.genotypes import Genotype
+from pystrand.mutations import PointMutation
 
 class Test_genotype_manipulation(unittest.TestCase):
 
@@ -54,7 +55,7 @@ class Test_genotype_manipulation(unittest.TestCase):
 
                 original_genome = genome.clone()
 
-                genome.mutate(1.0)
+                genome.mutate(PointMutation(1.0))
 
                 self.assertFalse(np.array_equiv(genome, original_genome))
 

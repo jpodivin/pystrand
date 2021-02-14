@@ -1,14 +1,30 @@
-import numpy as np
 import multiprocessing as mp
-from pystrand.genotypes import Genotype
+import numpy as np
 from pystrand.populations import BasePopulation
 from pystrand.selections import RouletteSelection, ElitismSelection, BaseSelection
+from pystrand.mutations import BaseMutation, PointMutation
 
 class Optimizer:
     """Base optimizer class.
-
+    Parameters
+    ----------
+        fitness_function : provides mapping from genotype to fitness value, [0, 1]
+        max_iterations :
+        population : Seed population, can include known sub-optimal solutions.
+        mutation_prob : 0.001 by default
+        mutation_op :
+            Mutation operator to use on genotypes.
+            Uses supplied mutation_prob. If None, defaults to PointMutation.
+            None by default.
+        crossover_prob : 0.0 by default, no crossover will take place
+        selection_methods :
+        selected_fraction :
+        outfile :
+        parallelize :
     Raises:
-        TypeError: if supplied wrong selection method type
+        TypeError :
+            If supplied wrong selection method type.
+            If supplied mutation_op not subclassing BaseMutation.
     """
 
     def __init__(self,
@@ -16,6 +32,7 @@ class Optimizer:
                  max_iterations,
                  population,
                  mutation_prob=0.001,
+                 mutation_op=None,
                  crossover_prob=0.0,
                  selection_methods='roulette',
                  selected_fraction=0.1,
@@ -23,21 +40,19 @@ class Optimizer:
                  parallelize=False,
                  **kwargs):
         """
-        Arguments:
-            fitness_function -- provides mapping from genotype to fitness value, [0, 1]
-            max_iterations --
-            population -- Seed population, can include known sub-optimal solutions.
-            mutation_prob -- 0.001 by default
-            crossover_prob -- 0.0 by default, no crossover will take place
-            selection_methods --
-            selected_fraction --
-            outfile --
-            parallelize --
-        Raises:
-            TypeError:
         """
         self._fitness_function = fitness_function
-        self._mutation_probability = mutation_prob
+
+        if mutation_op:
+            if isinstance(mutation_op, BaseMutation):
+                self._mutation_op = mutation_op
+            else:
+                raise TypeError(
+                    'Invalid mutation operator.',
+                    type(mutation_op))
+        else:
+            self._mutation_op = PointMutation(mutation_prob)
+
         self._crossover_probability = crossover_prob
         self._selection_methods = []
         self._parallelize = parallelize
@@ -83,9 +98,10 @@ class Optimizer:
         evaluated_individuals = self._population.individuals
         if self._parallelize:
             with mp.Pool() as worker_pool:
-                evaluated_individuals['fitness'] = worker_pool.map(
+                result = worker_pool.map_async(
                     self._fitness_function,
-                    evaluated_individuals['genotype'])
+                    evaluated_individuals['genotype']).get(5)
+                evaluated_individuals['fitness'] = result
         else:
             evaluated_individuals['fitness'] = [
                 self._fitness_function(individual)
@@ -115,6 +131,12 @@ class Optimizer:
     def fit(self, verbose=1):
         """
         Main training loop.
+
+        Parameters
+        ----------
+        verbose : int
+            If not '0' outputs statistics using print every generation.
+            Default is 1.
         """
         history = {
             "iteration" : [],
@@ -127,7 +149,11 @@ class Optimizer:
         iteration = 0
 
         while iteration < self._max_iterations:
-            self.evaluate_population()
+            try:
+                self.evaluate_population()
+            except mp.TimeoutError as e:
+                print(e)
+                break
 
             history["iteration"].append(iteration)
             history["max_fitness"].append(self._population.max_fitness)
@@ -145,7 +171,7 @@ class Optimizer:
 
             self.select_genomes()
 
-            self._population.mutate_genotypes(self._mutation_probability)
+            self._population.mutate_genotypes(self._mutation_op)
 
             if self._crossover_probability > 0.0:
                 self._population.cross_genomes(
