@@ -3,7 +3,9 @@ from pystrand.mutations import PointMutation
 
 class Genotype(np.ndarray):
     """
-
+    Genotype class, inherits from numpy ndarray and, in many ways,
+    behaves like it.
+    The code follows guidelines in: https://numpy.org/doc/stable/user/basics.subclassing.html
     """
     def __new__(
             cls,
@@ -14,7 +16,10 @@ class Genotype(np.ndarray):
             default_genome=None,
             protected=False,
             **kwargs):
-
+        """
+        Return:
+            New Genotype instance.
+        """
         if random_init:
             random_generator = np.random.default_rng(seed=seed)
             genome = random_generator.choice(gene_vals, genome_shape)
@@ -32,8 +37,10 @@ class Genotype(np.ndarray):
 
         return genome
 
-    def __array_finalized__(self, obj):
-
+    def __array_finalize__(self, obj):
+        """
+        https://numpy.org/doc/stable/reference/arrays.classes.html#numpy.class.__array_finalize__
+        """
         if obj is None:
             return
 
@@ -42,13 +49,19 @@ class Genotype(np.ndarray):
         self._protected = getattr(obj, '_protected', False)
 
     def __reduce__(self):
-
+        """
+        Prepare object for pickling.
+        https://numpy.org/doc/stable/reference/generated/numpy.ndarray.__reduce__.html
+        """
         pickled_genotype = super(Genotype, self).__reduce__()
         genotype_state = pickled_genotype[2] + (self._gene_vals, self._protected)
 
         return (pickled_genotype[0], pickled_genotype[1], genotype_state)
 
     def __setstate__(self, state):
+        """
+        Set value of attributes _gene_vals and _protected from state.
+        """
         self._gene_vals = state[-2]
         self._protected = state[-1]
 
@@ -95,26 +108,48 @@ class Genotype(np.ndarray):
 
     @property
     def genotype_shape(self):
+        """
+        Return shape of the genotype.
+
+        Note
+        ----
+
+        Equivalent to the shape attribute of the numpy ndarray.
+        """
         return self.shape
 
     @property
     def gene_vals(self):
+        """
+        Return _gene_vals.
+        """
         return self._gene_vals
 
     @property
     def fitness(self):
+        """
+        Return _genotype_fitness attribute.
+        """
         return self._genotype_fitness
 
     @property
     def protected(self):
+        """
+        Return _protected attribute.
+        """
         return self._protected
 
     @protected.setter
     def protected(self, new_value):
+        """
+        Set _protected attribute/flag of the genotype.
+        If _protected is `True` the genotype will not be altered by operators.
+        """
         self._protected = new_value
 
     def set_fitness(self, new_fitness):
         """
+        Set fitness of the genotype directly.
         Raises:
             TypeError: If 'new_fitness' isn't of type 'float'
         """
