@@ -1,5 +1,4 @@
 import multiprocessing as mp
-import numpy as np
 from pystrand.populations import BasePopulation
 from pystrand.selections import RouletteSelection, ElitismSelection, BaseSelection
 from pystrand.mutations import BaseMutation, PointMutation
