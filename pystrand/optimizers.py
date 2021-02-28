@@ -161,8 +161,12 @@ class Optimizer:
         while iteration < self._max_iterations:
             try:
                 self.evaluate_population()
-            except mp.TimeoutError as e:
-                print(e)
+            except mp.TimeoutError as timeoutException:
+                print(
+                    "Population evaluation timed out, with exception {}.".format(
+                        timeoutException
+                        )
+                    )
                 break
 
             history["iteration"].append(iteration)
