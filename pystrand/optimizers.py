@@ -90,11 +90,17 @@ class Optimizer:
 
 
     def evaluate_individual(self, individual):
-
+        """
+        Return fitness value of given individual.
+        """
         return self._fitness_function(individual)
 
     def evaluate_population(self):
-
+        """
+        Apply set fitness function to every individual in _population
+        in either sequential or parallel manner depending on value of
+        _paralelize attribute. And store result in the 'fitness' field.
+        """
         evaluated_individuals = self._population.individuals
         if self._parallelize:
             with mp.Pool() as worker_pool:
@@ -112,6 +118,11 @@ class Optimizer:
         self._population.replace_individuals(evaluated_individuals)
 
     def select_genomes(self):
+        """
+        Create new population by sequentially applying selection operators
+        in the order they were given to __init__.
+        Expand the new population to match the original one.
+        """
         new_population = BasePopulation(
             0,
             self._population.genome_shapes,
@@ -131,7 +142,7 @@ class Optimizer:
     def fit(self, verbose=1):
         """
         Main training loop.
-
+        Return statistics of the run as dictionary of lists.
         Parameters
         ----------
         verbose : int
