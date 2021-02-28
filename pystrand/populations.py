@@ -176,32 +176,56 @@ class BasePopulation:
     #Properties for easier retrieval of frequently used values.
     @property
     def population_size(self):
+        """
+        Return size of _individuals ndarray as an integer.
+        """
         return self._individuals.size
 
     @property
     def genome_shapes(self):
+        """
+        Return _genome_shapes list.
+        """
         return self._genome_shapes
 
     @property
     def gene_values(self):
+        """
+        Return _gene_values.
+        """
         return self._gene_values
 
     @property
     def individuals(self):
+        """
+        Return _individuals ndarray.
+        """
         return self._individuals
 
     @property
     def avg_fitness(self):
+        """
+        Return average fitness as float.
+        """
         return np.average([genotype['fitness'] for genotype in self._individuals])
 
     @property
     def max_fitness(self):
+        """
+        Return max fitness as float.
+        """
         return np.max([genotype['fitness'] for genotype in self._individuals])
 
     @property
     def min_fitness(self):
+        """
+        Return min fitness as float.
+        """
         return np.min([genotype['fitness'] for genotype in self._individuals])
 
     @property
     def fitness_std(self):
+        """
+        Return standard deviation of fitness as float.
+        """
         return np.std([genotype['fitness'] for genotype in self._individuals])
