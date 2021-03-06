@@ -55,6 +55,8 @@ class Optimizer:
 
         if log_path:
             self.logger = CsvLogger(log_path=log_path)
+        else:
+            self.logger = None
 
         self._crossover_probability = crossover_prob
         self._selection_methods = []
