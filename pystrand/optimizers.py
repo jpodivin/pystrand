@@ -2,6 +2,7 @@ import multiprocessing as mp
 from pystrand.populations import BasePopulation
 from pystrand.selections import RouletteSelection, ElitismSelection, BaseSelection
 from pystrand.mutations import BaseMutation, PointMutation
+from pystrand.loggers import CsvLogger
 
 class Optimizer:
     """Base optimizer class.
@@ -35,7 +36,7 @@ class Optimizer:
                  crossover_prob=0.0,
                  selection_methods='roulette',
                  selected_fraction=0.1,
-                 outfile='',
+                 log_path=None,
                  parallelize=False,
                  **kwargs):
         """
@@ -51,6 +52,9 @@ class Optimizer:
                     type(mutation_op))
         else:
             self._mutation_op = PointMutation(mutation_prob)
+
+        if log_path:
+            self.logger = CsvLogger(log_path=log_path)
 
         self._crossover_probability = crossover_prob
         self._selection_methods = []
@@ -193,5 +197,7 @@ class Optimizer:
                     )
 
             iteration += 1
+        if self.logger:
+            self.logger.save_history(history)
 
         return history
