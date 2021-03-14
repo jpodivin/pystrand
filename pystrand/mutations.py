@@ -64,3 +64,38 @@ class PointMutation(BaseMutation):
                 position = self._random_generator.choice(genotype.size)
                 gene_vals_subset = np.setdiff1d(genotype._gene_vals, [genotype.flat[position]])
                 genotype.flat[position] = self._random_generator.choice(gene_vals_subset)
+
+class BlockMutation(BaseMutation):
+    """
+    Defines block mutation operator. Subclasses the BaseMutation.
+    Changing several elements of the genotype at the same time, with given probability.
+
+    Parameters
+    ----------
+
+    probability : float
+        Probability of changing random block of genotype elements.
+        Default is 0.0
+    block_size : int
+        Size of the mutation block.
+        Default is 0, functionally equivalent to point mutation.
+    """
+    def __init__(self, probability=0.0, block_size=1):
+        """
+        Set probability of a block mutation and size of the block
+        """
+        self._mutation_probability = probability
+        self._block_size = block_size
+        super(BlockMutation, self).__init__()
+
+    def __call__(self, genotype):
+
+        if genotype.size != 0:
+            if self._random_generator.random() < self._mutation_probability:
+                position_counter = min(self._block_size, genotype.size)
+                position = self._random_generator.choice(genotype.size)
+
+                while position_counter > 0:
+                    genotype.flat[position] = self._random_generator.choice(genotype._gene_vals)
+                    position = (position+1)%genotype.size
+                    position_counter -= 1
