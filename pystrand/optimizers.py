@@ -44,7 +44,7 @@ class Optimizer:
         self._fitness_function = fitness_function
 
         if mutation_op:
-            if isinstance(mutation_op, BaseMutation):
+            if issubclass(type(mutation_op), BaseMutation):
                 self._mutation_op = mutation_op
             else:
                 raise TypeError(
@@ -191,7 +191,7 @@ class Optimizer:
 
             self.select_genomes()
 
-            self._population.mutate_genotypes(self._mutation_op)
+            self._population.mutate_genotypes(mutation_op=self._mutation_op)
 
             if self._crossover_probability > 0.0:
                 self._population.cross_genomes(
