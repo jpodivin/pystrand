@@ -92,7 +92,7 @@ class BlockMutation(BaseMutation):
 
         if genotype.size != 0:
             if self._random_generator.random() < self._mutation_probability:
-                position_counter = self._block_size
+                position_counter = min(self._block_size, genotype.size)
                 position = self._random_generator.choice(genotype.size)
 
                 while position_counter > 0:
