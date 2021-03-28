@@ -1,0 +1,5 @@
+pandas>=1.2.0 # BSD-3-Clause
+numpy>=1.18.0 # BSD-3-Clause
+pytest>=6.1.1 # MIT
+pylint>=2.5.0 # GPT
+flake8>=3.7.9 # MIT
