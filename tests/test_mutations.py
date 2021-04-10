@@ -3,6 +3,7 @@ import numpy as np
 from pystrand.genotypes import Genotype
 from pystrand.mutations import PointMutation, BlockMutation
 
+
 class TestPointMutation(unittest.TestCase):
 
     def setUp(self):
@@ -32,6 +33,7 @@ class TestPointMutation(unittest.TestCase):
                 self.assertTrue(genome.max() <= gene_vals.max())
 
                 self.assertTrue(genome.min() >= gene_vals.min())
+
 
 class TestBlockMutation(unittest.TestCase):
 
