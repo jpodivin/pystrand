@@ -15,6 +15,7 @@ target_genotypes_large = [
     np.resize(array, (100,)) for array in target_genotypes_small
     ]
 
+
 class FitnessFn(object):
     """
     Simple fitness function. 
@@ -37,6 +38,7 @@ class FitnessFn(object):
             return 0.0
         else:
             return 1.0 - result
+
 
 class Optimizer_init_test(unittest.TestCase):
 
@@ -105,6 +107,7 @@ class Optimizer_init_test(unittest.TestCase):
             self.assertIsInstance(new_optimizer, Optimizer)
 
             self.assertEqual(new_optimizer._fitness_function, fitness_fn)
+
 
 class Optimizer_Run_test_sequential(unittest.TestCase):
 
@@ -344,6 +347,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
                     0, 
                     np.diff(history['max_fitness']).min(),
                     msg="\nTarget genotype: %s \nMax_fitness: %s" %(target_genotype, history['max_fitness']))
+
 
 class Optimizer_Run_test_parallel(unittest.TestCase):
 

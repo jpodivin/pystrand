@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class BaseMutation:
     """
     Defines base mutation operator.
@@ -27,6 +28,7 @@ class BaseMutation:
         Pass genotype to the __mutate__ method.
         """
         self.__mutate__(genotype)
+
 
 class PointMutation(BaseMutation):
     """
@@ -64,6 +66,7 @@ class PointMutation(BaseMutation):
                 position = self._random_generator.choice(genotype.size)
                 gene_vals_subset = np.setdiff1d(genotype._gene_vals, [genotype.flat[position]])
                 genotype.flat[position] = self._random_generator.choice(gene_vals_subset)
+
 
 class BlockMutation(BaseMutation):
     """

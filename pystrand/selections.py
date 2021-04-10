@@ -1,6 +1,7 @@
 import numpy as np
 from pystrand.populations import BasePopulation
 
+
 class BaseSelection:
     """
     Base selection class.
@@ -58,6 +59,7 @@ class BaseSelection:
             dtype=population.individuals.dtype
             )
 
+
 class RandomSelection(BaseSelection):
     """
     Randomly selects a fraction of individuals in given population.
@@ -83,6 +85,7 @@ class RandomSelection(BaseSelection):
                 selected_individuals.append((fitness, individual))
 
         return selected_individuals
+
 
 class RouletteSelection(BaseSelection):
     """
@@ -121,6 +124,7 @@ class RouletteSelection(BaseSelection):
             p=probs)
 
         return selected_individuals
+
 
 class ElitismSelection(BaseSelection):
     """

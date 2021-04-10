@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pystrand", 
+    name="pystrand",
     version="0.0.1",
     author="Jiri Podivin",
     author_email="jpodivin@gmail.com",
@@ -20,11 +20,13 @@ setuptools.setup(
         "Topic :: Scientific/Engineering :: Artificial Life",
     ],
     python_requires=">=3.6",
-    install_requires=[ 
+    install_requires=[
         "numpy"
     ],
     extras_require={
-        "tests": ["pytest",
-                  "flake8"],
+        "tests": [
+            "pytest",
+            "flake8"
+        ],
     },
 )

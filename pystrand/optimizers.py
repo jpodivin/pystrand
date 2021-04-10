@@ -4,6 +4,7 @@ from pystrand.selections import RouletteSelection, ElitismSelection, BaseSelecti
 from pystrand.mutations import BaseMutation, PointMutation
 from pystrand.loggers import CsvLogger
 
+
 class Optimizer:
     """Base optimizer class.
     Parameters
@@ -92,7 +93,6 @@ class Optimizer:
                     'Invalid selection type.',
                     type(selection_method)
                     )
-
 
     def evaluate_individual(self, individual):
         """

@@ -2,6 +2,7 @@ import numpy as np
 from pystrand.genotypes import Genotype
 from pystrand.mutations import PointMutation
 
+
 class BasePopulation:
     """
     Collection of individual genotypes.
