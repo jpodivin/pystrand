@@ -1,8 +1,7 @@
 import unittest
 import numpy as np
 from pystrand.genotypes import Genotype
-from pystrand.mutations import *
-
+import pystrand.mutations as mut
 
 test_genotypes = {}
 test_shapes = [
@@ -11,7 +10,7 @@ test_shapes = [
         for j in range(1, 10)
         for k in range(1, 10)]
 
-test_gene_vals = [np.ceil(np.random.normal(scale = 10, size = 10)) for i in range(100)]
+test_gene_vals = [np.ceil(np.random.normal(scale = 10, size = 10)) for i in range(50)]
 
 for shape in test_shapes:
     for gene_vals in test_gene_vals:
@@ -28,7 +27,7 @@ for shape in test_shapes:
 class TestPointMutation(unittest.TestCase):
 
     def setUp(self):
-        self.test_genotypes = test_genotypes.copy()
+        self.test_genotypes = test_genotypes
         super(TestPointMutation, self).setUp()
     
     def test_genotype_mutation_bounds(self):
@@ -39,7 +38,7 @@ class TestPointMutation(unittest.TestCase):
             genome = self.test_genotypes[genome]
             altered_genome = genome['genotype'].clone()
 
-            altered_genome.mutate(PointMutation(1.0))
+            altered_genome.mutate(mut.PointMutation(1.0))
 
             self.assertFalse(np.array_equiv(genome, altered_genome))
 
@@ -53,7 +52,7 @@ class TestPointMutation(unittest.TestCase):
 class TestBlockMutation(unittest.TestCase):
 
     def setUp(self):
-        self.test_genotypes = test_genotypes.copy()
+        self.test_genotypes = test_genotypes
         super(TestBlockMutation, self).setUp()
     
     def test_genotype_mutation_bounds(self):
@@ -64,7 +63,7 @@ class TestBlockMutation(unittest.TestCase):
             genome = self.test_genotypes[genome]
             altered_genome = genome['genotype'].clone()
 
-            altered_genome.mutate(BlockMutation(1.0))
+            altered_genome.mutate(mut.BlockMutation(1.0))
 
             self.assertFalse(np.array_equiv(genome, altered_genome))
 
@@ -77,7 +76,7 @@ class TestBlockMutation(unittest.TestCase):
 class TestPermutationMutation(unittest.TestCase):
 
     def setUp(self):
-        self.test_genotypes = test_genotypes.copy()
+        self.test_genotypes = test_genotypes
         super(TestPermutationMutation, self).setUp()
     
     def test_genotype_mutation_bounds(self):
@@ -88,7 +87,7 @@ class TestPermutationMutation(unittest.TestCase):
             genome = self.test_genotypes[genome]
             altered_genome = genome['genotype'].clone()
 
-            altered_genome.mutate(PermutationMutation(1.0))
+            altered_genome.mutate(mut.PermutationMutation(1.0))
 
             self.assertFalse(np.array_equiv(genome, altered_genome))
 
