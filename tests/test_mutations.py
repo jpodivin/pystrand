@@ -8,9 +8,10 @@ test_shapes = [
     (i, j, k)
         for i in range(1, 10)
         for j in range(1, 10)
-        for k in range(1, 10)]
+        for k in range(1, 10)
+    ]
 
-test_gene_vals = [np.ceil(np.random.normal(scale = 10, size = 10)) for i in range(50)]
+test_gene_vals = [np.ceil(np.random.normal(scale = 10, size = 10)) for i in range(10)]
 
 for shape in test_shapes:
     for gene_vals in test_gene_vals:
