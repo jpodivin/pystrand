@@ -102,3 +102,47 @@ class BlockMutation(BaseMutation):
                     genotype.flat[position] = self._random_generator.choice(genotype._gene_vals)
                     position = (position+1)%genotype.size
                     position_counter -= 1
+
+
+class PermutationMutation(BaseMutation):
+
+    """Defines Permutation mutation operator.
+    Operator reorders elements of the genotype, either symbols
+    or subarrays, along the given axis, with set probability.
+
+    Parameters
+    ----------
+
+    probability : float
+        Probability of genotype undergoing permutation.
+        Default is 0.0
+    axis : int
+        Axis along which to permutate elements.
+        Default is 0, or the first axis.
+        
+        Note
+        ****
+        Invalid values, for example axis >= number of tensor dimensions
+        will result in exceptions or undefined behavior.
+
+    Note
+    ----
+    Unlike other mutation operators, permutation can not introduce new
+    symbols, or genes, into genotype. And has to be used in conjunction with
+    other operators capable of doing so. In order to be useful.
+    """
+    def __init__(self, probability=0.0, axis=0):
+        """Set probability for Permutation mutation
+        and an axis along which to shuffle.
+        """
+        self._mutation_probability = probability
+        self._axis = axis
+        super(PermutationMutation, self).__init__()
+
+    def __call__(self, genotype):
+        """Changes order of genotype subarrays along the given axis.
+        Uses numpy shuffle to obtain new permutation of the elements.
+        """
+        if genotype.size != 0:
+            if self._random_generator.random() < self._mutation_probability:
+                self._random_generator.shuffle(genotype, axis=self._axis)
