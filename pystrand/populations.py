@@ -122,14 +122,15 @@ class BasePopulation:
 
         self._individuals = np.append(self._individuals, new_individuals)
 
-    def mutate_genotypes(self, mutation_op=PointMutation(0.01)):
+    def mutate_genotypes(self, mutation_ops):
         """
-        Applies mutation operator to individuals with given probability.
+        Applies mutation operators to individuals in order provided.
         """
 
         for genotype in self._individuals['genotype']:
             if not genotype.protected:
-                genotype.mutate(mutation_op)
+                for mutation_op in mutation_ops:
+                    genotype.mutate(mutation_op)
 
     def cross_genomes(
             self,

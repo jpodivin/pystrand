@@ -73,8 +73,7 @@ class Genotype(np.ndarray):
         New symbol is selected from subset of _gene_vals.
 
         Arguments:
-            mutation_op -- float in range [0, 1.0] inclusive.
-                        Other values result in error, or undefined behavior.
+            mutation_op -- Mutation operator, subtype of BaseMutation
         """
         mutation_op(self)
 
