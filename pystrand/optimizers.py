@@ -35,7 +35,7 @@ class Optimizer:
                  mutation_prob=0.001,
                  mutation_op=None,
                  crossover_prob=0.0,
-                 selection_methods='roulette',
+                 selection_ops='roulette',
                  selected_fraction=0.1,
                  log_path=None,
                  parallelize=False,
@@ -66,8 +66,8 @@ class Optimizer:
         self._max_iterations = max_iterations
 
         #First we turn selection_methods into list, in case it isn't.
-        if not isinstance(selection_methods, list):
-            selection_methods = [selection_methods]
+        if not isinstance(selection_ops, list):
+            selection_ops = [selection_ops]
         """
         For each element in list of selection methods we check the type.
         Only Selection and string are accepted, other types raise TypeError.
@@ -75,7 +75,7 @@ class Optimizer:
         any other string will result in ValueError.
         """
 
-        for selection_method in selection_methods:
+        for selection_method in selection_ops:
             if isinstance(selection_method, str):
                 if selection_method == 'roulette':
                     self._selection_methods += [RouletteSelection(selected_fraction)]

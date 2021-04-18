@@ -221,7 +221,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
             new_optimizer = Optimizer(
                 fitness_fn,                
                 self.test_runtime_short,
-                selection_methods = 'elitism',
+                selection_ops = 'elitism',
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5
@@ -258,7 +258,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
             new_optimizer = Optimizer(
                 fitness_fn,                
                 self.test_runtime_short,
-                selection_methods = 'elitism',
+                selection_ops = 'elitism',
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5
@@ -296,7 +296,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
             new_optimizer = Optimizer(
                 fitness_fn,
                 self.test_runtime_short,
-                selection_methods = ['elitism', 'roulette'],
+                selection_ops = ['elitism', 'roulette'],
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5            
@@ -334,7 +334,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
             new_optimizer = Optimizer(
                 fitness_fn,
                 self.test_runtime_short,
-                selection_methods = ['elitism', 'roulette'],
+                selection_ops = ['elitism', 'roulette'],
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5
@@ -463,7 +463,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
             new_optimizer = Optimizer(
                 fitness_fn,                
                 self.test_runtime_short,
-                selection_methods = 'elitism',
+                selection_ops = 'elitism',
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5,
@@ -502,7 +502,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
             new_optimizer = Optimizer(
                 fitness_fn,                
                 self.test_runtime_short,
-                selection_methods = 'elitism',
+                selection_ops = 'elitism',
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5,
@@ -541,7 +541,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
             new_optimizer = Optimizer(
                 fitness_fn,
                 self.test_runtime_short,
-                selection_methods = ['elitism', 'roulette'],
+                selection_ops = ['elitism', 'roulette'],
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5,
@@ -580,7 +580,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
             new_optimizer = Optimizer(
                 fitness_fn,
                 self.test_runtime_short,
-                selection_methods = ['elitism', 'roulette'],
+                selection_ops = ['elitism', 'roulette'],
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5,
