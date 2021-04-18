@@ -33,7 +33,7 @@ class Optimizer:
                  max_iterations,
                  population,
                  mutation_prob=0.001,
-                 mutation_op=None,
+                 mutation_ops=None,
                  crossover_prob=0.0,
                  selection_ops='roulette',
                  selected_fraction=0.1,
@@ -44,15 +44,17 @@ class Optimizer:
         """
         self._fitness_function = fitness_function
 
-        if mutation_op:
-            if issubclass(type(mutation_op), BaseMutation):
-                self._mutation_op = mutation_op
+        if mutation_ops:
+            if isinstance(mutation_ops, list):
+                self._mutation_ops = mutation_ops
+            elif issubclass(type(mutation_ops), BaseMutation):
+                self._mutation_ops = [mutation_ops]
             else:
                 raise TypeError(
                     'Invalid mutation operator.',
-                    type(mutation_op))
+                    type(mutation_ops))
         else:
-            self._mutation_op = PointMutation(mutation_prob)
+            self._mutation_ops = [PointMutation(mutation_prob)]
 
         if log_path:
             self.logger = CsvLogger(log_path=log_path)
@@ -191,7 +193,7 @@ class Optimizer:
 
             self.select_genomes()
 
-            self._population.mutate_genotypes(mutation_op=self._mutation_op)
+            self._population.mutate_genotypes(mutation_ops=self._mutation_ops)
 
             if self._crossover_probability > 0.0:
                 self._population.cross_genomes(
