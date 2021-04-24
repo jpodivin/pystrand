@@ -146,3 +146,34 @@ class PermutationMutation(BaseMutation):
         if genotype.size != 0:
             if self._random_generator.random() < self._mutation_probability:
                 self._random_generator.shuffle(genotype, axis=self._axis)
+
+class ShiftMutation(BaseMutation):
+
+    """
+    Defines Shift mutation operator.
+    Flattened genotype array is shifted to the right by a chosen
+    number of positions. Same number of leftmost positions of the
+    flattened genotype is filled with symbols, randomly chosen
+    from genotypes gene_vals.
+
+    Parameters:
+    -----------
+
+    probability : float
+        Probability of changing random block of genotype elements.
+        Default is 0.0
+    shift_scale : int
+        Number of places we want to shift right on the flattened genotype.
+        Same number of symbols on the left side of the flattened genotype
+        are replaced by randomly selected symbols from gene_vals.
+    """
+    def __init__(self, probability=0.0, shift_scale=1):
+        self._mutation_probability = probability
+        self._shift_scale = shift_scale
+        super(ShiftMutation, self).__init__()
+
+    def __mutate__(self, genotype):
+        if genotype.size != 0:
+            if self._random_generator.random() < self._mutation_probability:
+                np.roll(genotype, self._shift_scale)
+                genotype.flat[:self._shift_scale] = self._random_generator.choice(genotype.gene_vals, self._shift_scale)
