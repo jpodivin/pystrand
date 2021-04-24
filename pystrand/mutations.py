@@ -91,7 +91,7 @@ class BlockMutation(BaseMutation):
         self._block_size = block_size
         super(BlockMutation, self).__init__()
 
-    def __call__(self, genotype):
+    def __mutate__(self, genotype):
 
         if genotype.size != 0:
             if self._random_generator.random() < self._mutation_probability:
@@ -119,7 +119,7 @@ class PermutationMutation(BaseMutation):
     axis : int
         Axis along which to permutate elements.
         Default is 0, or the first axis.
-        
+
         Note
         ****
         Invalid values, for example axis >= number of tensor dimensions
@@ -139,7 +139,7 @@ class PermutationMutation(BaseMutation):
         self._axis = axis
         super(PermutationMutation, self).__init__()
 
-    def __call__(self, genotype):
+    def __mutate__(self, genotype):
         """Changes order of genotype subarrays along the given axis.
         Uses numpy shuffle to obtain new permutation of the elements.
         """
