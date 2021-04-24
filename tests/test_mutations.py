@@ -97,3 +97,27 @@ class TestPermutationMutation(unittest.TestCase):
 
             self.assertTrue(
                 genome['genotype'].min() >= genome['gene_vals'].min())
+
+class TestShiftMutation(unittest.TestCase):
+
+    def setUp(self):
+        self.test_genotypes = test_genotypes
+        super(TestShiftMutation, self).setUp()
+    
+    def test_genotype_mutation_bounds(self):
+        """
+        Checks operation of mutation operator.
+        """
+        for genome in self.test_genotypes:
+            genome = self.test_genotypes[genome]
+            altered_genome = genome['genotype'].clone()
+
+            altered_genome.mutate(mut.ShiftMutation(1.0))
+
+            self.assertFalse(np.array_equiv(genome, altered_genome))
+
+            self.assertTrue(
+                genome['genotype'].max() <= genome['gene_vals'].max())
+
+            self.assertTrue(
+                genome['genotype'].min() >= genome['gene_vals'].min())
