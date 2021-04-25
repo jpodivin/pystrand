@@ -11,23 +11,31 @@ class BaseMutation:
 
     None
     """
-    def __init__(self):
+    def __init__(self, probability=0.0):
         """
         Set up random generator to be used by mutation operator.
         """
         self._random_generator = np.random.default_rng()
+        self._mutation_probability = probability
 
     def __mutate__(self, genotype):
         """
         Apply mutation operator, in this case identity, on the given genotype.
         """
-        pass
+        raise NotImplementedError()
+
+    def _check_mutation(self, genotype):
+
+        return (
+            genotype.size != 0 \
+            and self._random_generator.random() > self._mutation_probability)
 
     def __call__(self, genotype):
         """
         Pass genotype to the __mutate__ method.
         """
-        self.__mutate__(genotype)
+        if self._check_mutation(genotype):
+            self.__mutate__(genotype)
 
 
 class PointMutation(BaseMutation):
@@ -42,13 +50,6 @@ class PointMutation(BaseMutation):
         Probability of changing random element of genotype.
         Default is 0.0
     """
-    def __init__(self, probability=0.0):
-        """
-        Set probability of a point mutation.
-        """
-        self._mutation_probability = probability
-        super(PointMutation, self).__init__()
-
     def __mutate__(self, genotype):
         """
         Apply mutation operator on the given genotype.
@@ -58,14 +59,12 @@ class PointMutation(BaseMutation):
         -------------------------------
 
         A single element (symbol or gene) of genotype, changes its value
-        to one of the other values defined in the _gene_vals of given genotype.
+        to one of the other values defined in the gene_vals of given genotype.
         It is not possible for gene to remain the same.
         """
-        if genotype.size != 0:
-            if self._random_generator.random() < self._mutation_probability:
-                position = self._random_generator.choice(genotype.size)
-                gene_vals_subset = np.setdiff1d(genotype._gene_vals, [genotype.flat[position]])
-                genotype.flat[position] = self._random_generator.choice(gene_vals_subset)
+        position = self._random_generator.choice(genotype.size)
+        gene_vals_subset = np.setdiff1d(genotype.gene_vals, [genotype.flat[position]])
+        genotype.flat[position] = self._random_generator.choice(gene_vals_subset)
 
 
 class BlockMutation(BaseMutation):
@@ -87,21 +86,18 @@ class BlockMutation(BaseMutation):
         """
         Set probability of a block mutation and size of the block
         """
-        self._mutation_probability = probability
         self._block_size = block_size
-        super(BlockMutation, self).__init__()
+        super(BlockMutation, self).__init__(probability)
 
     def __mutate__(self, genotype):
 
-        if genotype.size != 0:
-            if self._random_generator.random() < self._mutation_probability:
-                position_counter = min(self._block_size, genotype.size)
-                position = self._random_generator.choice(genotype.size)
+        position_counter = min(self._block_size, genotype.size)
+        position = self._random_generator.choice(genotype.size)
 
-                while position_counter > 0:
-                    genotype.flat[position] = self._random_generator.choice(genotype._gene_vals)
-                    position = (position+1)%genotype.size
-                    position_counter -= 1
+        while position_counter > 0:
+            genotype.flat[position] = self._random_generator.choice(genotype.gene_vals)
+            position = (position+1)%genotype.size
+            position_counter -= 1
 
 
 class PermutationMutation(BaseMutation):
@@ -135,17 +131,15 @@ class PermutationMutation(BaseMutation):
         """Set probability for Permutation mutation
         and an axis along which to shuffle.
         """
-        self._mutation_probability = probability
         self._axis = axis
-        super(PermutationMutation, self).__init__()
+        super(PermutationMutation, self).__init__(probability)
 
     def __mutate__(self, genotype):
         """Changes order of genotype subarrays along the given axis.
         Uses numpy shuffle to obtain new permutation of the elements.
         """
-        if genotype.size != 0:
-            if self._random_generator.random() < self._mutation_probability:
-                self._random_generator.shuffle(genotype, axis=self._axis)
+        self._random_generator.shuffle(genotype, axis=self._axis)
+
 
 class ShiftMutation(BaseMutation):
 
@@ -168,12 +162,11 @@ class ShiftMutation(BaseMutation):
         are replaced by randomly selected symbols from gene_vals.
     """
     def __init__(self, probability=0.0, shift_scale=1):
-        self._mutation_probability = probability
         self._shift_scale = shift_scale
-        super(ShiftMutation, self).__init__()
+        super(ShiftMutation, self).__init__(probability)
 
     def __mutate__(self, genotype):
-        if genotype.size != 0:
-            if self._random_generator.random() < self._mutation_probability:
-                np.roll(genotype, self._shift_scale)
-                genotype.flat[:self._shift_scale] = self._random_generator.choice(genotype.gene_vals, self._shift_scale)
+        np.roll(genotype, self._shift_scale)
+        genotype.flat[:self._shift_scale] = self._random_generator.choice(
+            genotype.gene_vals,
+            self._shift_scale)
