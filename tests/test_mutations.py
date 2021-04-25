@@ -37,7 +37,7 @@ class TestPointMutation(unittest.TestCase):
         """
         for genome in self.test_genotypes:
             genome = self.test_genotypes[genome]
-            altered_genome = genome['genotype'].clone()
+            altered_genome = genome['genotype'].copy()
 
             altered_genome.mutate(mut.PointMutation(1.0))
 
@@ -62,7 +62,7 @@ class TestBlockMutation(unittest.TestCase):
         """
         for genome in self.test_genotypes:
             genome = self.test_genotypes[genome]
-            altered_genome = genome['genotype'].clone()
+            altered_genome = genome['genotype'].copy()
 
             altered_genome.mutate(mut.BlockMutation(1.0))
 
@@ -86,7 +86,7 @@ class TestPermutationMutation(unittest.TestCase):
         """
         for genome in self.test_genotypes:
             genome = self.test_genotypes[genome]
-            altered_genome = genome['genotype'].clone()
+            altered_genome = genome['genotype'].copy()
 
             altered_genome.mutate(mut.PermutationMutation(1.0))
 
@@ -110,7 +110,7 @@ class TestShiftMutation(unittest.TestCase):
         """
         for genome in self.test_genotypes:
             genome = self.test_genotypes[genome]
-            altered_genome = genome['genotype'].clone()
+            altered_genome = genome['genotype'].copy()
 
             altered_genome.mutate(mut.ShiftMutation(1.0))
 

@@ -98,7 +98,7 @@ class BasePopulation:
         if strategy == 'clone':
             new_individuals = np.random.choice(self._individuals, size_difference)
             for individual in new_individuals:
-                individual['genotype'] = individual['genotype'].clone()
+                individual['genotype'] = individual['genotype'].copy()
                 individual['genotype'].protected = False
 
         elif strategy == 'random':
@@ -160,7 +160,7 @@ class BasePopulation:
 
         #Ugly but it works.
         return np.array(
-            [(fitness, genotype.clone()) for fitness, genotype in self._individuals[indices]],
+            [(fitness, genotype.copy()) for fitness, genotype in self._individuals[indices]],
             dtype=self._dtype)
 
     def append_individuals(self, new_individuals):
