@@ -89,21 +89,10 @@ class Genotype(np.ndarray):
             #Random mask is used if none defined.
             mask = np.ndarray(self.genotype_shape, dtype=bool)
 
-        descendant_genome = self.clone()
+        descendant_genome = self.copy()
         descendant_genome[mask] = partner_genotype[mask]
 
         return descendant_genome
-
-    def clone(self):
-        """
-        Returns copy of this Genome object.
-        Genome, gene values and genome shape are all preserved.
-        """
-
-        return Genotype(
-            self.genotype_shape,
-            gene_vals=self.gene_vals,
-            default_genome=self.copy())
 
     @property
     def genotype_shape(self):
