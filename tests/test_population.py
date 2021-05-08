@@ -7,7 +7,7 @@ class Test_population(unittest.TestCase):
 
     def test_individual_generation(self):
         for pop_size in self.pop_sizes:
-            population = BasePopulation(pop_size, 
+            population = BasePopulation(pop_size,
                                     (100, 1))
 
             self.assertIsInstance(population, BasePopulation)

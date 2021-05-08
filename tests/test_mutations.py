@@ -30,7 +30,7 @@ class TestPointMutation(unittest.TestCase):
     def setUp(self):
         self.test_genotypes = test_genotypes
         super(TestPointMutation, self).setUp()
-    
+
     def test_genotype_mutation_bounds(self):
         """
         Checks operation of mutation operator.
@@ -55,7 +55,7 @@ class TestBlockMutation(unittest.TestCase):
     def setUp(self):
         self.test_genotypes = test_genotypes
         super(TestBlockMutation, self).setUp()
-    
+
     def test_genotype_mutation_bounds(self):
         """
         Checks operation of mutation operator.
@@ -79,7 +79,7 @@ class TestPermutationMutation(unittest.TestCase):
     def setUp(self):
         self.test_genotypes = test_genotypes
         super(TestPermutationMutation, self).setUp()
-    
+
     def test_genotype_mutation_bounds(self):
         """
         Checks operation of mutation operator.
@@ -103,7 +103,7 @@ class TestShiftMutation(unittest.TestCase):
     def setUp(self):
         self.test_genotypes = test_genotypes
         super(TestShiftMutation, self).setUp()
-    
+
     def test_genotype_mutation_bounds(self):
         """
         Checks operation of mutation operator.

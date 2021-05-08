@@ -18,8 +18,8 @@ target_genotypes_large = [
 
 class FitnessFn(object):
     """
-    Simple fitness function. 
-    The elements of the genotype array serve as coefficients 
+    Simple fitness function.
+    The elements of the genotype array serve as coefficients
     for 1d polynomial Pg, evaluated at x=1.1
     Our goal is to find coefficients allowing for Pg(x) = Pt(x).
 
@@ -33,7 +33,7 @@ class FitnessFn(object):
     def __call__(self, individual):
         polynomial = np.poly1d(individual)
         result = abs(polynomial(self.x)-self.target_polynomial_val)
-        
+
         if result > 1.0:
             return 0.0
         else:
@@ -46,18 +46,18 @@ class Optimizer_init_test(unittest.TestCase):
         """
         Optimizer init test. Only checks genotype preservation and instantiation
         """
-        
+
         for target_genotype in target_genotypes_small:
-           
+
             fitness_fn = FitnessFn(target_genotype)
             target_genotype = Genotype(
-                target_genotype.shape, 
-                gene_vals=np.unique(target_genotype), 
+                target_genotype.shape,
+                gene_vals=np.unique(target_genotype),
                 default_genome=target_genotype
                 )
 
             population = BasePopulation(
-                pop_size = np.sum(target_genotype.shape)*10, 
+                pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = target_genotype.gene_vals,
                 random_init = True
@@ -79,18 +79,18 @@ class Optimizer_init_test(unittest.TestCase):
         """
         Optimizer init test. Only checks genotype preservation and instantiation
         """
-        
+
         for target_genotype in target_genotypes_large:
 
             fitness_fn = FitnessFn(target_genotype)
             target_genotype = Genotype(
-                target_genotype.shape, 
-                gene_vals=np.unique(target_genotype), 
+                target_genotype.shape,
+                gene_vals=np.unique(target_genotype),
                 default_genome=target_genotype
                 )
 
             population = BasePopulation(
-                pop_size = np.sum(target_genotype.shape)*10, 
+                pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = target_genotype.gene_vals,
                 random_init = True
@@ -111,16 +111,16 @@ class Optimizer_init_test(unittest.TestCase):
 
 class Optimizer_Run_test_sequential(unittest.TestCase):
 
-    test_runtime_short = 10    
+    test_runtime_short = 10
     test_runtime_long = 100
     history_dict_keys = [
-        'iteration', 
-        'max_fitness', 
-        'min_fitness', 
-        'fitness_avg', 
+        'iteration',
+        'max_fitness',
+        'min_fitness',
+        'fitness_avg',
         'fitness_std'
         ]
-    
+
     def test_optimizer_run_small(self):
         """
         Short run of basic optimizer with default params and binary genome.
@@ -129,13 +129,13 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
-        
-        for target_genotype in target_genotypes_small:            
-            
+        """
+
+        for target_genotype in target_genotypes_small:
+
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = np.sum(target_genotype.shape)*10, 
+                pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
@@ -150,11 +150,11 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
                 )
 
             history = new_optimizer.fit(verbose=0)
-            
+
             self.assertIsInstance(history, dict)
 
             self.assertTrue(
-                set(self.history_dict_keys).issubset(history.keys()) 
+                set(self.history_dict_keys).issubset(history.keys())
                 and set(history.keys()).issubset(self.history_dict_keys)
                 )
 
@@ -168,12 +168,12 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
+        """
         for target_genotype in target_genotypes_large:
 
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = np.sum(target_genotype.shape)*10, 
+                pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
@@ -186,18 +186,18 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
                 mutation_prob = 0.1,
                 crossover_prob = 0.5
                 )
-                
+
             history = new_optimizer.fit(verbose=0)
-            
+
             self.assertIsInstance(history, dict)
 
             self.assertTrue(
-                set(self.history_dict_keys).issubset(history.keys()) 
+                set(self.history_dict_keys).issubset(history.keys())
                 and set(history.keys()).issubset(self.history_dict_keys)
                 )
 
             self.assertLessEqual(max(history['iteration']), self.test_runtime_long)
-    
+
     def test_optimizer_elitism_small(self):
         """
         Short run of basic optimizer with elitism and binary genome.
@@ -206,20 +206,20 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
-        
-        for target_genotype in target_genotypes_small[1:]:        
+        """
+
+        for target_genotype in target_genotypes_small[1:]:
 
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = target_genotype.size*10, 
+                pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
                 )
 
             new_optimizer = Optimizer(
-                fitness_fn,                
+                fitness_fn,
                 self.test_runtime_short,
                 selection_ops = 'elitism',
                 population = population,
@@ -231,7 +231,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
-                    0, 
+                    0,
                     np.diff(history['max_fitness']).min(),
                     msg="\nTarget genotype: %s \nMax_fitness: %s" %(target_genotype, history['max_fitness']))
 
@@ -243,20 +243,20 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
-        
+        """
+
         for target_genotype in target_genotypes_large[1:]:
 
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = target_genotype.size*10, 
+                pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
                 )
 
             new_optimizer = Optimizer(
-                fitness_fn,                
+                fitness_fn,
                 self.test_runtime_short,
                 selection_ops = 'elitism',
                 population = population,
@@ -268,7 +268,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
-                    0, 
+                    0,
                     np.diff(history['max_fitness']).min(),
                     msg="\nTarget genotype: %s \nMax_fitness: %s" %(target_genotype, history['max_fitness']))
 
@@ -281,13 +281,13 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
-        
+        """
+
         for target_genotype in target_genotypes_small[1:]:
 
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = target_genotype.size*10, 
+                pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
@@ -299,14 +299,14 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
                 selection_ops = ['elitism', 'roulette'],
                 population = population,
                 mutation_prob = 0.1,
-                crossover_prob = 0.5            
+                crossover_prob = 0.5
                 )
 
             history = new_optimizer.fit(verbose=0)
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
-                    0, 
+                    0,
                     np.diff(history['max_fitness']).min(),
                     msg="\nTarget genotype: %s \nMax_fitness: %s " %(target_genotype, history['max_fitness']))
 
@@ -319,13 +319,13 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
-        
+        """
+
         for target_genotype in target_genotypes_large[1:]:
-            
+
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = target_genotype.size*10, 
+                pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
@@ -344,23 +344,23 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
-                    0, 
+                    0,
                     np.diff(history['max_fitness']).min(),
                     msg="\nTarget genotype: %s \nMax_fitness: %s" %(target_genotype, history['max_fitness']))
 
 
 class Optimizer_Run_test_parallel(unittest.TestCase):
 
-    test_runtime_short = 10    
+    test_runtime_short = 10
     test_runtime_long = 100
     history_dict_keys = [
-        'iteration', 
-        'max_fitness', 
-        'min_fitness', 
-        'fitness_avg', 
+        'iteration',
+        'max_fitness',
+        'min_fitness',
+        'fitness_avg',
         'fitness_std'
         ]
-    
+
     def test_optimizer_run_small(self):
         """
         Short run of basic optimizer with default params and binary genome.
@@ -369,13 +369,13 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
-        
-        for target_genotype in target_genotypes_small:            
-            
+        """
+
+        for target_genotype in target_genotypes_small:
+
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = np.sum(target_genotype.shape)*10, 
+                pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
@@ -391,11 +391,11 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
                 )
 
             history = new_optimizer.fit(verbose=0)
-            
+
             self.assertIsInstance(history, dict)
 
             self.assertTrue(
-                set(self.history_dict_keys).issubset(history.keys()) 
+                set(self.history_dict_keys).issubset(history.keys())
                 and set(history.keys()).issubset(self.history_dict_keys)
                 )
 
@@ -409,12 +409,12 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
+        """
         for target_genotype in target_genotypes_large:
-            
+
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = np.sum(target_genotype.shape)*10, 
+                pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
@@ -428,18 +428,18 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
                 crossover_prob = 0.5,
                 parallelize = True
                 )
-                
+
             history = new_optimizer.fit(verbose=0)
-            
+
             self.assertIsInstance(history, dict)
 
             self.assertTrue(
-                set(self.history_dict_keys).issubset(history.keys()) 
+                set(self.history_dict_keys).issubset(history.keys())
                 and set(history.keys()).issubset(self.history_dict_keys)
                 )
 
             self.assertLessEqual(max(history['iteration']), self.test_runtime_long)
-    
+
     def test_optimizer_elitism_small(self):
         """
         Short run of basic optimizer with elitism and binary genome.
@@ -448,20 +448,20 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
-        
+        """
+
         for target_genotype in target_genotypes_small[1:]:
-        
+
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = target_genotype.size*10, 
+                pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
                 )
 
             new_optimizer = Optimizer(
-                fitness_fn,                
+                fitness_fn,
                 self.test_runtime_short,
                 selection_ops = 'elitism',
                 population = population,
@@ -474,7 +474,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
-                    0, 
+                    0,
                     np.diff(history['max_fitness']).min(),
                     msg="\nTarget genotype: %s \nMax_fitness: %s" %(target_genotype, history['max_fitness'])
                     )
@@ -487,20 +487,20 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
-        
-        for target_genotype in target_genotypes_large[1:]:            
-            
+        """
+
+        for target_genotype in target_genotypes_large[1:]:
+
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = target_genotype.size*10, 
+                pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
                 )
 
             new_optimizer = Optimizer(
-                fitness_fn,                
+                fitness_fn,
                 self.test_runtime_short,
                 selection_ops = 'elitism',
                 population = population,
@@ -513,7 +513,7 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
-                    0, 
+                    0,
                     np.diff(history['max_fitness']).min(),
                     msg="\nTarget genotype: %s \nMax_fitness: %s" %(target_genotype, history['max_fitness'])
                     )
@@ -526,52 +526,13 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
             - ticks of algorithm
             - consistency of genotypes
             - returned history of training
-        """      
-        
-        for target_genotype in target_genotypes_small[1:]:        
-           
-            fitness_fn = FitnessFn(target_genotype)
-            population = BasePopulation(
-                pop_size = target_genotype.size*10, 
-                genome_shapes = target_genotype.shape,
-                gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
-
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
-                selection_ops = ['elitism', 'roulette'],
-                population = population,
-                mutation_prob = 0.1,
-                crossover_prob = 0.5,
-                parallelize = True            
-                )
-
-            history = new_optimizer.fit(verbose=0)
-
-            if len(history['max_fitness']) > 1:
-                self.assertLessEqual(
-                    0, 
-                    np.diff(history['max_fitness']).min(),
-                    msg="\nTarget genotype: %s \nMax_fitness: %s " %(target_genotype, history['max_fitness'])
-                    )
-
-    def test_optimizer_combined_large(self):
         """
-        Short run of basic optimizer with elitism and binary genome.
-        1000 generations should be enough to reach an optimal match.
-        However this is still stochastic process so the test will check:
-            - ticks of algorithm
-            - consistency of genotypes
-            - returned history of training
-        """      
-        
-        for target_genotype in target_genotypes_large[1:]:
-           
+
+        for target_genotype in target_genotypes_small[1:]:
+
             fitness_fn = FitnessFn(target_genotype)
             population = BasePopulation(
-                pop_size = target_genotype.size*10, 
+                pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
                 random_init = True
@@ -591,7 +552,46 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
-                    0, 
+                    0,
+                    np.diff(history['max_fitness']).min(),
+                    msg="\nTarget genotype: %s \nMax_fitness: %s " %(target_genotype, history['max_fitness'])
+                    )
+
+    def test_optimizer_combined_large(self):
+        """
+        Short run of basic optimizer with elitism and binary genome.
+        1000 generations should be enough to reach an optimal match.
+        However this is still stochastic process so the test will check:
+            - ticks of algorithm
+            - consistency of genotypes
+            - returned history of training
+        """
+
+        for target_genotype in target_genotypes_large[1:]:
+
+            fitness_fn = FitnessFn(target_genotype)
+            population = BasePopulation(
+                pop_size = target_genotype.size*10,
+                genome_shapes = target_genotype.shape,
+                gene_vals = np.unique(target_genotype),
+                random_init = True
+                )
+
+            new_optimizer = Optimizer(
+                fitness_fn,
+                self.test_runtime_short,
+                selection_ops = ['elitism', 'roulette'],
+                population = population,
+                mutation_prob = 0.1,
+                crossover_prob = 0.5,
+                parallelize = True
+                )
+
+            history = new_optimizer.fit(verbose=0)
+
+            if len(history['max_fitness']) > 1:
+                self.assertLessEqual(
+                    0,
                     np.diff(history['max_fitness']).min(),
                     msg="\nTarget genotype: %s \nMax_fitness: %s" %(target_genotype, history['max_fitness'])
                     )
