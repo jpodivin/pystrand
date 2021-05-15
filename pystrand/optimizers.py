@@ -205,3 +205,9 @@ class Optimizer:
             self.logger.save_history(history)
 
         return history
+
+    @property
+    def population(self):
+        """Return optimized population.
+        """
+        return self._population
