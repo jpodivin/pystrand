@@ -4,7 +4,8 @@ import uuid
 from pystrand.populations import BasePopulation
 from pystrand.selections import RouletteSelection, ElitismSelection, BaseSelection
 from pystrand.mutations import BaseMutation, PointMutation
-from pystrand.loggers import CsvLogger
+from pystrand.loggers.csv_logger import CsvLogger
+from pystrand.loggers.details import RunDetails
 
 
 class Optimizer:
@@ -15,14 +16,14 @@ class Optimizer:
         max_iterations :
         population : Seed population, can include known sub-optimal solutions.
         mutation_prob : 0.001 by default
-        mutation_op :
+        mutation_ops :
             Mutation operator to use on genotypes.
             Uses supplied mutation_prob. If None, defaults to PointMutation.
             None by default.
         crossover_prob : 0.0 by default, no crossover will take place
-        selection_methods :
+        selection_ops :
         selected_fraction :
-        outfile :
+        log_path :
         parallelize :
     Raises:
         TypeError :
@@ -44,6 +45,7 @@ class Optimizer:
                  **kwargs):
         """
         """
+        self._optimizer_uuid = str(uuid.uuid1())
         self._fitness_function = fitness_function
 
         if mutation_ops:
@@ -60,8 +62,14 @@ class Optimizer:
 
         if log_path:
             self.logger = CsvLogger(log_path=log_path)
+
+            if kwargs.get('save_details'):
+                self.details_logger = RunDetails(log_path=log_path)
+            else:
+                self.details_logger = None
         else:
             self.logger = None
+            self.details_logger = None
 
         self._crossover_probability = crossover_prob
         self._selection_methods = []
@@ -209,6 +217,9 @@ class Optimizer:
         if self.logger:
             self.logger.save_history(history, run_id=run_id)
 
+        if self.details_logger:
+            self.details_logger.save_run_details(self)
+
         return history
 
     @property
@@ -216,3 +227,9 @@ class Optimizer:
         """Return optimized population.
         """
         return self._population
+
+    @property
+    def optimizer_uuid(self):
+        """Return uuid of the optimizer.
+        """
+        return self._optimizer_uuid

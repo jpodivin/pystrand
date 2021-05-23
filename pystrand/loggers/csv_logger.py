@@ -1,17 +1,7 @@
 import os
-import uuid
-
 import pandas as pd
 
-
-class BaseLogger:
-    """Base logger class providing common path and name handling.
-    """
-    def __init__(self, log_path, log_file_name='history'):
-
-        self.log_path = os.path.abspath(log_path)
-        self.log_file_name = log_file_name
-
+from pystrand.loggers.base import BaseLogger
 
 class CsvLogger(BaseLogger):
     """Uses pandas Dataframe to process history
@@ -23,7 +13,6 @@ class CsvLogger(BaseLogger):
         set during the __init__ call and a id hash of the data object.
         Raises PermissionError if denied access.
         """
-      
 
         log_file_name = "{0}_{1}.log".format(
             self.log_file_name,
