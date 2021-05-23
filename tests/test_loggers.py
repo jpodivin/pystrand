@@ -29,6 +29,6 @@ class TestCsvLogger(TestCase):
 
         data = {'foo': 'bar'}
 
-        logger.save_history(data)
+        logger.save_history(data, 'buzz')
 
         mock_dataframe.assert_called_once_with(data=data)

@@ -1,4 +1,6 @@
 import multiprocessing as mp
+import uuid
+
 from pystrand.populations import BasePopulation
 from pystrand.selections import RouletteSelection, ElitismSelection, BaseSelection
 from pystrand.mutations import BaseMutation, PointMutation
@@ -156,6 +158,8 @@ class Optimizer:
             If not '0' outputs statistics using print every generation.
             Default is 1.
         """
+        run_id = uuid.uuid1()
+
         history = {
             "iteration" : [],
             "max_fitness" : [],
@@ -201,8 +205,9 @@ class Optimizer:
                     )
 
             iteration += 1
+
         if self.logger:
-            self.logger.save_history(history)
+            self.logger.save_history(history, run_id=run_id)
 
         return history
 
