@@ -30,7 +30,8 @@ class RunDetails(BaseLogger):
             'id': optimizer.optimizer_uuid,
             'max_iterations': optimizer._max_iterations,
             'mutation_ops': [_get_mutation_details(op) for op in optimizer._mutation_ops],
-            'selection_ops': [_get_selection_details(op) for op in optimizer._selection_methods]
+            'selection_ops': [_get_selection_details(op) for op in optimizer._selection_methods],
+            'best_individual': "{}".format(optimizer.population.retrieve_best()[0])
         }
         details_path = optimizer.optimizer_uuid + ".json"
         details_path = os.path.join(self.log_path, details_path)
