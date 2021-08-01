@@ -14,37 +14,6 @@ class BaseSelection:
         self._name = kwargs.get("name", "Selection")
         self._rng = np.random.default_rng()
 
-    def __get_selected_population__(
-            self,
-            selected_individuals,
-            population_size,
-            genome_shapes,
-            gene_values,
-            individual_dtype):
-        """
-        Creates new Population object from selected_individuals.
-
-        Parameters
-        ----------
-            selected_individuals : seed individuals forming the population
-            population_size : number of individuals in given population
-            genome_shapes : shapes of individual genomes as numpy arrays
-            gene_values : possible values of genes for given population
-            individual_dtype : numpy dtype defined by Population class
-        """
-        selected_individuals = np.array(
-            selected_individuals,
-            dtype=individual_dtype
-            ).flatten()
-
-        selected_population = BasePopulation(
-            population_size,
-            genome_shapes,
-            gene_vals=gene_values,
-            seed_individuals=selected_individuals)
-
-        return selected_population
-
     def __select__(self, population):
         return population.individuals
 
