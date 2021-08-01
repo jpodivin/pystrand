@@ -126,8 +126,7 @@ class RouletteSelection(BaseSelection):
 
 
 class ElitismSelection(BaseSelection):
-    """
-    Select n individuals with highest fitness values.
+    """Select n individuals with the highest fitness values.
 
     Parameters
     ----------

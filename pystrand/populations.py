@@ -153,6 +153,12 @@ class BasePopulation:
         """
         'n' individuals with highest value of fitness are retrieved.
         Genotype objects don't support comparison, individuals can't be sorted directly.
+
+        Parameters
+        ----------
+
+        size: int
+
         """
         indices = np.argsort(self._individuals['fitness'])[-size:]
 
