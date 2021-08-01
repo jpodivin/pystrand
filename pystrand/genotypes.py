@@ -2,7 +2,6 @@
 """
 
 import numpy as np
-from pystrand.mutations import PointMutation
 
 class Genotype(np.ndarray):
     """
@@ -38,6 +37,9 @@ class Genotype(np.ndarray):
         Return:
             New Genotype instance.
         """
+        if gene_vals is None:
+            gene_vals = [0, 1]
+
         if random_init:
             random_generator = np.random.default_rng(seed=seed)
             genome = random_generator.choice(gene_vals, shape)
@@ -45,9 +47,6 @@ class Genotype(np.ndarray):
             genome = default_genome
         else:
             genome = np.zeros(shape)
-
-        if gene_vals is None:
-            gene_vals = [0, 1]
 
         genome = genome.view(cls)
         genome._gene_vals = gene_vals
@@ -85,7 +84,7 @@ class Genotype(np.ndarray):
 
         super(Genotype, self).__setstate__(state[:-2])
 
-    def mutate(self, mutation_op=PointMutation(0.01)):
+    def mutate(self, mutation_op):
         """
         Alters one gene (symbol) with given probability.
         New symbol is selected from subset of _gene_vals.
