@@ -93,15 +93,13 @@ class Optimizer:
                 else:
                     raise ValueError(
                         'Unknown selection algorithm name.',
-                        selection_method
-                    )
+                        selection_method)
             elif isinstance(selection_method, BaseSelection):
                 self._selection_methods += [selection_method]
             else:
                 raise TypeError(
                     'Invalid selection type.',
-                    type(selection_method)
-                    )
+                    type(selection_method))
 
     def evaluate_individual(self, individual):
         """
@@ -144,12 +142,10 @@ class Optimizer:
 
         for selection_method in self._selection_methods:
             new_population.append_individuals(
-                selection_method.select(self._population)
-                )
+                selection_method.select(self._population))
 
         new_population.expand_population(
-            self._population.population_size
-            )
+            self._population.population_size)
 
         self._population = new_population
 
@@ -204,8 +200,7 @@ class Optimizer:
 
             if self._crossover_probability > 0.0:
                 self._population.cross_genomes(
-                    crossover_prob=self._crossover_probability
-                    )
+                    crossover_prob=self._crossover_probability)
 
             iteration += 1
 
