@@ -1,7 +1,6 @@
 """Selection operators
 """
 import numpy as np
-from pystrand.populations import BasePopulation
 
 
 class BaseSelection:
