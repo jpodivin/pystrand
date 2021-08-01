@@ -1,3 +1,6 @@
+"""Genotypes
+"""
+
 import numpy as np
 from pystrand.mutations import PointMutation
 

@@ -43,7 +43,10 @@ class Optimizer:
                  log_path=None,
                  parallelize=False,
                  **kwargs):
-        """
+        """For each element in list of selection methods we check the type.
+        Only Selection and string are accepted, other types raise TypeError.
+        The strings must be reckognized as names of algorithm,
+        any other string will result in ValueError.
         """
         self._optimizer_uuid = str(uuid.uuid1())
         self._fitness_function = fitness_function
@@ -80,12 +83,6 @@ class Optimizer:
         #First we turn selection_methods into list, in case it isn't.
         if not isinstance(selection_ops, list):
             selection_ops = [selection_ops]
-        """
-        For each element in list of selection methods we check the type.
-        Only Selection and string are accepted, other types raise TypeError.
-        The strings must be reckognized as names of algorithm,
-        any other string will result in ValueError.
-        """
 
         for selection_method in selection_ops:
             if isinstance(selection_method, str):
@@ -184,9 +181,7 @@ class Optimizer:
             except mp.TimeoutError as timeoutException:
                 print(
                     "Population evaluation timed out, with exception {}.".format(
-                        timeoutException
-                        )
-                    )
+                        timeoutException))
                 break
 
             history["iteration"].append(iteration)

@@ -1,14 +1,15 @@
+"""Selection operators
+"""
 import numpy as np
 from pystrand.populations import BasePopulation
 
 
 class BaseSelection:
-    """
-    Base selection class.
+    """Base selection operator class.
+    Doesn't apply any criteria and selects all individuals by default.
     """
     def __init__(
             self,
-            *args,
             **kwargs):
         self._name = kwargs.get("name", "Selection")
         self._rng = np.random.default_rng()
@@ -45,24 +46,24 @@ class BaseSelection:
         return selected_population
 
     def __select__(self, population):
-        selected_individuals = []
-
-        for fitness, individual in population.individuals:
-            selected_individuals.append((fitness, individual))
-
-        return selected_individuals
+        return population.individuals
 
     def select(self, population):
+        """Public select method.
 
+        Parameters
+        ----------
+
+        population : Population
+            Population on which the operator will be applied.
+        """
         return np.array(
             self.__select__(population),
-            dtype=population.individuals.dtype
-            )
+            dtype=population.individuals.dtype)
 
 
 class RandomSelection(BaseSelection):
-    """
-    Randomly selects a fraction of individuals in given population.
+    """Randomly selects a fraction of individuals in given population.
     The selection probability is given as argument.
     """
 
@@ -78,11 +79,9 @@ class RandomSelection(BaseSelection):
 
     def __select__(self, population):
 
-        selected_individuals = []
-
-        for fitness, individual in population.individuals:
-            if self._rng.random() < self._selection_prob:
-                selected_individuals.append((fitness, individual))
+        selected_individuals = self._rng.choice(
+            population.individuals,
+            size=int(self._selection_prob*population.individuals.size))
 
         return selected_individuals
 
@@ -128,6 +127,7 @@ class RouletteSelection(BaseSelection):
 
 class ElitismSelection(BaseSelection):
     """
+    Select n individuals with highest fitness values.
 
     Parameters
     ----------
