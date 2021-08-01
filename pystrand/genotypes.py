@@ -12,7 +12,7 @@ class Genotype(np.ndarray):
     """
     def __new__(
             cls,
-            genome_shape,
+            shape,
             random_init=False,
             gene_vals=None,
             seed=0,
@@ -20,16 +20,31 @@ class Genotype(np.ndarray):
             protected=False,
             **kwargs):
         """
+        Sets up the instance of the Genotype.
+        Much of the functionality defined here is duplicated in the __array_finalize__
+        method, as there are several ways the ndarray can be instantiated.
+
+        Parameters
+        ----------
+
+        cls : type
+        shape : tuple
+        random_init : bool
+        gene_vals : list
+        seed : integer
+        default_genome : ndarray
+        protected : bool
+
         Return:
             New Genotype instance.
         """
         if random_init:
             random_generator = np.random.default_rng(seed=seed)
-            genome = random_generator.choice(gene_vals, genome_shape)
+            genome = random_generator.choice(gene_vals, shape)
         elif default_genome is not None:
             genome = default_genome
         else:
-            genome = np.zeros(genome_shape)
+            genome = np.zeros(shape)
 
         if gene_vals is None:
             gene_vals = [0, 1]
