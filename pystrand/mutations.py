@@ -10,7 +10,10 @@ class BaseMutation:
     Parameters
     ----------
 
-    None
+    probability : float
+        Probability of changing random element of genotype.
+        Default is 0.0
+
     """
     def __init__(self, probability=0.0):
         """Set up random generator to be used by mutation operator.
@@ -31,10 +34,9 @@ class BaseMutation:
         ----------
 
         genotype : Genotype
-
-        Genotype has to have size > 0 and generated random number has to be
-        greater than preset threshold.
-        Conditions are located here to simplify development and troubleshooting.
+            Genotype has to have size > 0 and generated random number has to be
+            greater than preset threshold.
+            Conditions are located here to simplify development and troubleshooting.
         """
         return (
             genotype.size != 0 \
@@ -48,6 +50,7 @@ class BaseMutation:
         ----------
 
         genotype : Genotype
+
         """
         if self._check_mutation(genotype):
             self.__mutate__(genotype)
@@ -64,6 +67,7 @@ class PointMutation(BaseMutation):
     probability : float
         Probability of changing random element of genotype.
         Default is 0.0
+
     """
     def __mutate__(self, genotype):
         """
@@ -96,6 +100,7 @@ class BlockMutation(BaseMutation):
     block_size : int
         Size of the mutation block.
         Default is 0, functionally equivalent to point mutation.
+
     """
     def __init__(self, probability=0.0, block_size=1):
         """
@@ -141,6 +146,7 @@ class PermutationMutation(BaseMutation):
     Unlike other mutation operators, permutation can not introduce new
     symbols, or genes, into genotype. And has to be used in conjunction with
     other operators capable of doing so. In order to be useful.
+
     """
     def __init__(self, probability=0.0, axis=0):
         """Set probability for Permutation mutation
@@ -175,6 +181,7 @@ class ShiftMutation(BaseMutation):
         Number of places we want to shift right on the flattened genotype.
         Same number of symbols on the left side of the flattened genotype
         are replaced by randomly selected symbols from gene_vals.
+
     """
     def __init__(self, probability=0.0, shift_scale=1):
         self._shift_scale = shift_scale

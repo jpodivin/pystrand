@@ -2,21 +2,25 @@ import numpy as np
 from pystrand.genotypes import Genotype
 
 class BasePopulation:
-    """
-    Collection of individual genotypes.
+    """Collection of individual genotypes.
     Provides facilities for working with multiple genotypes at the same time.
 
     Parameters
     ----------
-        pop_size : number of individuals in given population
-        genome_shapes : shapes of individual genomes as numpy arrays
-        random_init : if the genomes are supposed to be randomized
-        gene_vals : possible values of genes for given population
-        seed :
-        default_genome : used as genome for entire population,
-                            if random_init = False
-        seed_individuals : numpy array of evaluated inidividuals
-        individual_dtype : numpy dtype defined by Population class
+    pop_size : int
+        number of individuals in given population
+    genome_shapes : tuple, list
+        shapes of individual genomes as numpy arrays
+    random_init : bool
+        if the genomes are supposed to be randomized
+    gene_vals : list
+        possible values of genes for given population
+    seed : int
+    default_genome : Genotype
+        used as genome for entire population,
+        if random_init = False
+    seed_individuals : Population
+        numpy array of evaluated inidividuals
 
     """
 
@@ -66,8 +70,10 @@ class BasePopulation:
         """
         Replaces existing individuals managed by population with 'new_individuals'.
 
-        Raises:
-            TypeError if new_individuals isn't numpy array of required dtype.
+        Raises
+        ------
+        TypeError
+            If new_individuals isn't numpy array of required dtype.
         """
         if not isinstance(new_individuals, np.ndarray):
             raise TypeError()
@@ -85,11 +91,14 @@ class BasePopulation:
 
         Parameters
         ----------
-        target_pop_size : number of individuals we want in population.
-        strategy : how are the new individuals created.
-                    Two available options are 'clone' and 'random'.
-                    The 'clone' strategy selects random existing individuals,
-                    while the 'random' strategy generates new ones.
+
+        target_pop_size : int
+            number of individuals we want in population.
+        strategy : string
+            how are the new individuals created.
+            Two available options are 'clone' and 'random'.
+            The 'clone' strategy selects random existing individuals,
+            while the 'random' strategy generates new ones.
         """
         size_difference = target_pop_size-self.population_size
 
@@ -139,8 +148,8 @@ class BasePopulation:
 
         Parameters
         ----------
-            secondary_population :
-            crossover_prob :
+        secondary_population : Population
+        crossover_prob : float
         """
         if secondary_population is None:
             secondary_population = self._individuals['genotype']
@@ -157,7 +166,7 @@ class BasePopulation:
         Parameters
         ----------
 
-        size: int
+        size : int
 
         """
         indices = np.argsort(self._individuals['fitness'])[-size:]
@@ -171,8 +180,10 @@ class BasePopulation:
         """
         Appends array of 'new_individuals' to existing individuals managed by Population.
 
-        Raises:
-            TypeError if new_individuals isn't numpy array of required dtype.
+        Raises
+        ------
+        TypeError
+            If new_individuals isn't numpy array of required dtype.
         """
         if not isinstance(new_individuals, np.ndarray) or new_individuals.dtype.type is not self._dtype.type:
             raise TypeError()

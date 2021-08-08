@@ -61,7 +61,7 @@ class RouletteSelection(BaseSelection):
 
     Parameters
     ----------
-        selected_population_fraction : float, required
+    selected_population_fraction : float, required
     """
 
     def __init__(
@@ -98,7 +98,7 @@ class ElitismSelection(BaseSelection):
 
     Parameters
     ----------
-        selected_population_fraction : float, required
+    selected_population_fraction : float, required
     """
     def __init__(
             self,

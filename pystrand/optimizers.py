@@ -10,25 +10,33 @@ from pystrand.loggers.details import RunDetails
 
 class Optimizer:
     """Base optimizer class.
+
     Parameters
     ----------
-        fitness_function : provides mapping from genotype to fitness value, [0, 1]
-        max_iterations :
-        population : Seed population, can include known sub-optimal solutions.
-        mutation_prob : 0.001 by default
-        mutation_ops :
-            Mutation operator to use on genotypes.
-            Uses supplied mutation_prob. If None, defaults to PointMutation.
-            None by default.
-        crossover_prob : 0.0 by default, no crossover will take place
-        selection_ops :
-        selected_fraction :
-        log_path :
-        parallelize :
-    Raises:
-        TypeError :
-            If supplied wrong selection method type.
-            If supplied mutation_op not subclassing BaseMutation.
+    fitness_function : callable
+        provides mapping from genotype to fitness value, [0, 1]
+    max_iterations :
+    population : Population
+        Seed population, can include known sub-optimal solutions.
+    mutation_prob : float
+        0.001 by default
+    mutation_ops :
+        Mutation operator to use on genotypes.
+        Uses supplied mutation_prob. If None, defaults to PointMutation.
+        None by default.
+    crossover_prob : float
+        0.0 by default, no crossover will take place
+    selection_ops :
+    selected_fraction :
+    log_path :
+    parallelize :
+
+    Raises
+    ------
+    TypeError
+        If supplied wrong selection method type.
+        If supplied mutation_op not subclassing BaseMutation.
+
     """
 
     def __init__(self,
@@ -108,8 +116,7 @@ class Optimizer:
         return self._fitness_function(individual)
 
     def evaluate_population(self):
-        """
-        Apply set fitness function to every individual in _population
+        """Apply set fitness function to every individual in _population
         in either sequential or parallel manner depending on value of
         _paralelize attribute. And store result in the 'fitness' field.
         """
@@ -130,8 +137,7 @@ class Optimizer:
         self._population.replace_individuals(evaluated_individuals)
 
     def select_genomes(self):
-        """
-        Create new population by sequentially applying selection operators
+        """Create new population by sequentially applying selection operators
         in the order they were given to __init__.
         Expand the new population to match the original one.
         """
@@ -150,14 +156,16 @@ class Optimizer:
         self._population = new_population
 
     def fit(self, verbose=1):
-        """
-        Main training loop.
+        """Main training loop.
         Return statistics of the run as dictionary of lists.
+
         Parameters
         ----------
+
         verbose : int
             If not '0' outputs statistics using print every generation.
             Default is 1.
+
         """
         run_id = uuid.uuid1()
 

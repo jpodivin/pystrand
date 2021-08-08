@@ -34,7 +34,9 @@ class Genotype(np.ndarray):
         default_genome : ndarray
         protected : bool
 
-        Return:
+        Returns
+        -------
+        Genotype
             New Genotype instance.
         """
         if gene_vals is None:
@@ -89,18 +91,24 @@ class Genotype(np.ndarray):
         Alters one gene (symbol) with given probability.
         New symbol is selected from subset of _gene_vals.
 
-        Arguments:
-            mutation_op -- Mutation operator, subtype of BaseMutation
+        Parameters
+        ----------
+
+        mutation_op : Mutation
+            Mutation operator, subtype of BaseMutation
         """
         mutation_op(self)
 
     def crossover(self, partner_genotype, mask=None):
         """
-        Arguments:
-            partner_genotype --
-            mask -- determines which genes (symbols) are selected from parents.
-                    If left as 'None' the mask is randomized each time.
-                    Thus impacting performance.
+        Parameters
+        ----------
+
+        partner_genotype : Genotype
+        mask : array like
+            determines which genes (symbols) are selected from parents.
+            If left as 'None' the mask is randomized each time.
+            Thus impacting performance.
         """
         if mask is None:
             #Random mask is used if none defined.
@@ -155,8 +163,11 @@ class Genotype(np.ndarray):
     def set_fitness(self, new_fitness):
         """
         Set fitness of the genotype directly.
-        Raises:
-            TypeError: If 'new_fitness' isn't of type 'float'
+
+        Raises
+        ------
+        TypeError:
+            If 'new_fitness' isn't of type 'float'
         """
         if not isinstance(new_fitness, float):
             raise TypeError()
