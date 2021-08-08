@@ -43,7 +43,10 @@ class Optimizer:
                  log_path=None,
                  parallelize=False,
                  **kwargs):
-        """
+        """For each element in list of selection methods we check the type.
+        Only Selection and string are accepted, other types raise TypeError.
+        The strings must be reckognized as names of algorithm,
+        any other string will result in ValueError.
         """
         self._optimizer_uuid = str(uuid.uuid1())
         self._fitness_function = fitness_function
@@ -80,12 +83,6 @@ class Optimizer:
         #First we turn selection_methods into list, in case it isn't.
         if not isinstance(selection_ops, list):
             selection_ops = [selection_ops]
-        """
-        For each element in list of selection methods we check the type.
-        Only Selection and string are accepted, other types raise TypeError.
-        The strings must be reckognized as names of algorithm,
-        any other string will result in ValueError.
-        """
 
         for selection_method in selection_ops:
             if isinstance(selection_method, str):
@@ -96,15 +93,13 @@ class Optimizer:
                 else:
                     raise ValueError(
                         'Unknown selection algorithm name.',
-                        selection_method
-                    )
+                        selection_method)
             elif isinstance(selection_method, BaseSelection):
                 self._selection_methods += [selection_method]
             else:
                 raise TypeError(
                     'Invalid selection type.',
-                    type(selection_method)
-                    )
+                    type(selection_method))
 
     def evaluate_individual(self, individual):
         """
@@ -147,12 +142,10 @@ class Optimizer:
 
         for selection_method in self._selection_methods:
             new_population.append_individuals(
-                selection_method.select(self._population)
-                )
+                selection_method.select(self._population))
 
         new_population.expand_population(
-            self._population.population_size
-            )
+            self._population.population_size)
 
         self._population = new_population
 
@@ -184,9 +177,7 @@ class Optimizer:
             except mp.TimeoutError as timeoutException:
                 print(
                     "Population evaluation timed out, with exception {}.".format(
-                        timeoutException
-                        )
-                    )
+                        timeoutException))
                 break
 
             history["iteration"].append(iteration)
@@ -209,8 +200,7 @@ class Optimizer:
 
             if self._crossover_probability > 0.0:
                 self._population.cross_genomes(
-                    crossover_prob=self._crossover_probability
-                    )
+                    crossover_prob=self._crossover_probability)
 
             iteration += 1
 

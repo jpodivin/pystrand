@@ -1,68 +1,37 @@
+"""Selection operators
+"""
 import numpy as np
-from pystrand.populations import BasePopulation
 
 
 class BaseSelection:
-    """
-    Base selection class.
+    """Base selection operator class.
+    Doesn't apply any criteria and selects all individuals by default.
     """
     def __init__(
             self,
-            *args,
             **kwargs):
         self._name = kwargs.get("name", "Selection")
         self._rng = np.random.default_rng()
 
-    def __get_selected_population__(
-            self,
-            selected_individuals,
-            population_size,
-            genome_shapes,
-            gene_values,
-            individual_dtype):
-        """
-        Creates new Population object from selected_individuals.
+    def __select__(self, population):
+        return population.individuals
+
+    def select(self, population):
+        """Public select method.
 
         Parameters
         ----------
-            selected_individuals : seed individuals forming the population
-            population_size : number of individuals in given population
-            genome_shapes : shapes of individual genomes as numpy arrays
-            gene_values : possible values of genes for given population
-            individual_dtype : numpy dtype defined by Population class
+
+        population : Population
+            Population on which the operator will be applied.
         """
-        selected_individuals = np.array(
-            selected_individuals,
-            dtype=individual_dtype
-            ).flatten()
-
-        selected_population = BasePopulation(
-            population_size,
-            genome_shapes,
-            gene_vals=gene_values,
-            seed_individuals=selected_individuals)
-
-        return selected_population
-
-    def __select__(self, population):
-        selected_individuals = []
-
-        for fitness, individual in population.individuals:
-            selected_individuals.append((fitness, individual))
-
-        return selected_individuals
-
-    def select(self, population):
-
         return np.array(
             self.__select__(population),
-            dtype=population.individuals.dtype
-            )
+            dtype=population.individuals.dtype)
 
 
 class RandomSelection(BaseSelection):
-    """
-    Randomly selects a fraction of individuals in given population.
+    """Randomly selects a fraction of individuals in given population.
     The selection probability is given as argument.
     """
 
@@ -78,11 +47,9 @@ class RandomSelection(BaseSelection):
 
     def __select__(self, population):
 
-        selected_individuals = []
-
-        for fitness, individual in population.individuals:
-            if self._rng.random() < self._selection_prob:
-                selected_individuals.append((fitness, individual))
+        selected_individuals = self._rng.choice(
+            population.individuals,
+            size=int(self._selection_prob*population.individuals.size))
 
         return selected_individuals
 
@@ -127,7 +94,7 @@ class RouletteSelection(BaseSelection):
 
 
 class ElitismSelection(BaseSelection):
-    """
+    """Select n individuals with the highest fitness values.
 
     Parameters
     ----------

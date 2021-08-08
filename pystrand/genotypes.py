@@ -1,5 +1,7 @@
+"""Genotypes
+"""
+
 import numpy as np
-from pystrand.mutations import PointMutation
 
 class Genotype(np.ndarray):
     """
@@ -9,7 +11,7 @@ class Genotype(np.ndarray):
     """
     def __new__(
             cls,
-            genome_shape,
+            shape,
             random_init=False,
             gene_vals=None,
             seed=0,
@@ -17,19 +19,34 @@ class Genotype(np.ndarray):
             protected=False,
             **kwargs):
         """
+        Sets up the instance of the Genotype.
+        Much of the functionality defined here is duplicated in the __array_finalize__
+        method, as there are several ways the ndarray can be instantiated.
+
+        Parameters
+        ----------
+
+        cls : type
+        shape : tuple
+        random_init : bool
+        gene_vals : list
+        seed : integer
+        default_genome : ndarray
+        protected : bool
+
         Return:
             New Genotype instance.
         """
+        if gene_vals is None:
+            gene_vals = [0, 1]
+
         if random_init:
             random_generator = np.random.default_rng(seed=seed)
-            genome = random_generator.choice(gene_vals, genome_shape)
+            genome = random_generator.choice(gene_vals, shape)
         elif default_genome is not None:
             genome = default_genome
         else:
-            genome = np.zeros(genome_shape)
-
-        if gene_vals is None:
-            gene_vals = [0, 1]
+            genome = np.zeros(shape)
 
         genome = genome.view(cls)
         genome._gene_vals = gene_vals
@@ -67,7 +84,7 @@ class Genotype(np.ndarray):
 
         super(Genotype, self).__setstate__(state[:-2])
 
-    def mutate(self, mutation_op=PointMutation(0.01)):
+    def mutate(self, mutation_op):
         """
         Alters one gene (symbol) with given probability.
         New symbol is selected from subset of _gene_vals.

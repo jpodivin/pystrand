@@ -1,5 +1,6 @@
+"""Mutation operators
+"""
 import numpy as np
-
 
 class BaseMutation:
     """
@@ -12,20 +13,29 @@ class BaseMutation:
     None
     """
     def __init__(self, probability=0.0):
-        """
-        Set up random generator to be used by mutation operator.
+        """Set up random generator to be used by mutation operator.
         """
         self._random_generator = np.random.default_rng()
         self._mutation_probability = probability
 
     def __mutate__(self, genotype):
-        """
-        Apply mutation operator, in this case identity, on the given genotype.
+        """Apply mutation operator on the given genotype.
         """
         raise NotImplementedError()
 
     def _check_mutation(self, genotype):
+        """Determine whether or not to apply mutation
+        to the genotype.
 
+        Parameters
+        ----------
+
+        genotype : Genotype
+
+        Genotype has to have size > 0 and generated random number has to be
+        greater than preset threshold.
+        Conditions are located here to simplify development and troubleshooting.
+        """
         return (
             genotype.size != 0 \
             and self._random_generator.random() > self._mutation_probability)
@@ -33,6 +43,11 @@ class BaseMutation:
     def __call__(self, genotype):
         """
         Pass genotype to the __mutate__ method.
+
+        Parameters
+        ----------
+
+        genotype : Genotype
         """
         if self._check_mutation(genotype):
             self.__mutate__(genotype)

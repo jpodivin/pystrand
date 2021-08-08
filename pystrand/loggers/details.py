@@ -3,7 +3,7 @@ import os
 from pystrand.loggers.base import BaseLogger
 
 class RunDetails(BaseLogger):
-
+# pylint: disable=protected-access
     def save_run_details(self, optimizer):
         def _get_mutation_details(mutation_op):
             details = {

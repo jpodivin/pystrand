@@ -1,2 +1,2 @@
-numpy==1.18.5
-pandas>=1.2.0
+numpy>=1.18.5 # BSD-3-Clause
+pandas>=1.2.0 # BSD-3-Clause

@@ -1,7 +1,5 @@
 import numpy as np
 from pystrand.genotypes import Genotype
-from pystrand.mutations import PointMutation
-
 
 class BasePopulation:
     """
@@ -155,6 +153,12 @@ class BasePopulation:
         """
         'n' individuals with highest value of fitness are retrieved.
         Genotype objects don't support comparison, individuals can't be sorted directly.
+
+        Parameters
+        ----------
+
+        size: int
+
         """
         indices = np.argsort(self._individuals['fitness'])[-size:]
 
