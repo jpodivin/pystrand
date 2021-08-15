@@ -21,7 +21,7 @@ class Test_genotype_manipulation(unittest.TestCase):
         for shape in self.test_shapes:
             genome = Genotype(shape)
             self.assertIsInstance(genome, Genotype)
-            self.assertEqual(genome.genotype_shape, shape)
+            self.assertEqual(genome.shape, shape)
 
     def test_genotype_initiation_zeros(self):
         """
