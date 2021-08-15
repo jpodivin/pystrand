@@ -112,24 +112,12 @@ class Genotype(np.ndarray):
         """
         if mask is None:
             #Random mask is used if none defined.
-            mask = np.ndarray(self.genotype_shape, dtype=bool)
+            mask = np.ndarray(self.shape, dtype=bool)
 
         descendant_genome = self.copy()
         descendant_genome[mask] = partner_genotype[mask]
 
         return descendant_genome
-
-    @property
-    def genotype_shape(self):
-        """
-        Return shape of the genotype.
-
-        Note
-        ----
-
-        Equivalent to the shape attribute of the numpy ndarray.
-        """
-        return self.shape
 
     @property
     def gene_vals(self):
