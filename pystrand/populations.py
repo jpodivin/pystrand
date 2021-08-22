@@ -67,8 +67,13 @@ class BasePopulation:
         super().__init__(**kwargs)
 
     def replace_individuals(self, new_individuals):
-        """
-        Replaces existing individuals managed by population with 'new_individuals'.
+        """Safely replace existing individuals in the population with 'new_individuals'.
+
+        Parameters
+        ----------
+
+        new_individuals: np.ndarry
+            new individuals array
 
         Raises
         ------
@@ -86,8 +91,7 @@ class BasePopulation:
             target_pop_size,
             strategy='clone'):
 
-        """
-        Increases number of indivuals in given population.
+        """Increases number of indivuals in given population.
 
         Parameters
         ----------

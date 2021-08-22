@@ -1,4 +1,4 @@
-from pystrand.optimizers import Optimizer
+from pystrand.optimizers import BaseOptimizer
 from pystrand.genotypes import Genotype
 from pystrand.populations import BasePopulation
 import unittest
@@ -8,23 +8,21 @@ target_genotypes_small = [
         np.zeros((10),),
         np.array([i%2 for i in range(10)]),
         np.array([i+1%2 for i in range(10)]),
-        np.array([i%3 for i in range(10)])
-        ]
+        np.array([i%3 for i in range(10)])]
 
 target_genotypes_large = [
     np.resize(array, (100,)) for array in target_genotypes_small
     ]
 
 
-class FitnessFn(object):
-    """
-    Simple fitness function.
+class FitnessFn:
+    """Simple fitness function.
     The elements of the genotype array serve as coefficients
     for 1d polynomial Pg, evaluated at x=1.1
     Our goal is to find coefficients allowing for Pg(x) = Pt(x).
 
     For the sake of simplicity, and since we defined fitness in range <0.0, 1.0>,
-    the value evaluated P is clipped to and transformed.
+    the value evaluated P is clipped and transformed.
     """
     def __init__(self, target_genotype):
         self.x = 1.1
@@ -53,25 +51,21 @@ class Optimizer_init_test(unittest.TestCase):
             target_genotype = Genotype(
                 target_genotype.shape,
                 gene_vals=np.unique(target_genotype),
-                default_genome=target_genotype
-                )
+                default_genome=target_genotype)
 
             population = BasePopulation(
                 pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = target_genotype.gene_vals,
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                10,
-                population = population,
+            new_optimizer = BaseOptimizer(
+                population,
+                fitness_function=fitness_fn,
                 mutation_prob = 0.1,
-                crossover_prob = 0.5
-                )
+                crossover_prob = 0.5)
 
-            self.assertIsInstance(new_optimizer, Optimizer)
+            self.assertIsInstance(new_optimizer, BaseOptimizer)
 
             self.assertEqual(new_optimizer._fitness_function, fitness_fn)
 
@@ -86,25 +80,21 @@ class Optimizer_init_test(unittest.TestCase):
             target_genotype = Genotype(
                 target_genotype.shape,
                 gene_vals=np.unique(target_genotype),
-                default_genome=target_genotype
-                )
+                default_genome=target_genotype)
 
             population = BasePopulation(
                 pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = target_genotype.gene_vals,
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                10,
-                population = population,
+            new_optimizer = BaseOptimizer(
+                population,
+                fitness_function=fitness_fn,
                 mutation_prob = 0.1,
-                crossover_prob = 0.5
-                )
+                crossover_prob = 0.5)
 
-            self.assertIsInstance(new_optimizer, Optimizer)
+            self.assertIsInstance(new_optimizer, BaseOptimizer)
 
             self.assertEqual(new_optimizer._fitness_function, fitness_fn)
 
@@ -118,8 +108,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
         'max_fitness',
         'min_fitness',
         'fitness_avg',
-        'fitness_std'
-        ]
+        'fitness_std']
 
     def test_optimizer_run_small(self):
         """
@@ -138,18 +127,15 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
                 pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 population = population,
                 mutation_prob = 0.1,
-                crossover_prob = 0.5
-                )
+                crossover_prob = 0.5)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             self.assertIsInstance(history, dict)
 
@@ -176,25 +162,21 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
                 pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
                 population = population,
+                max_iterations = self.test_runtime_long,
                 mutation_prob = 0.1,
-                crossover_prob = 0.5
-                )
+                crossover_prob = 0.5)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             self.assertIsInstance(history, dict)
 
             self.assertTrue(
                 set(self.history_dict_keys).issubset(history.keys())
-                and set(history.keys()).issubset(self.history_dict_keys)
-                )
+                and set(history.keys()).issubset(self.history_dict_keys))
 
             self.assertLessEqual(max(history['iteration']), self.test_runtime_long)
 
@@ -215,19 +197,16 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
                 pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 selection_ops = 'elitism',
                 population = population,
                 mutation_prob = 0.1,
-                crossover_prob = 0.5
-                )
+                crossover_prob = 0.5)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
@@ -252,19 +231,16 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
                 pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 selection_ops = 'elitism',
                 population = population,
                 mutation_prob = 0.1,
-                crossover_prob = 0.5
-                )
+                crossover_prob = 0.5)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
@@ -290,19 +266,16 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
                 pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 selection_ops = ['elitism', 'roulette'],
                 population = population,
                 mutation_prob = 0.1,
-                crossover_prob = 0.5
-                )
+                crossover_prob = 0.5)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
@@ -312,8 +285,7 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
 
 
     def test_optimizer_combined_large(self):
-        """
-        Short run of basic optimizer with elitism and binary genome.
+        """Long run of basic optimizer with elitism and binary genome.
         1000 generations should be enough to reach an optimal match.
         However this is still stochastic process so the test will check:
             - ticks of algorithm
@@ -328,19 +300,16 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
                 pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 selection_ops = ['elitism', 'roulette'],
                 population = population,
                 mutation_prob = 0.1,
-                crossover_prob = 0.5
-                )
+                crossover_prob = 0.5)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
@@ -378,19 +347,16 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
                 pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5,
-                parallelize = True
-                )
+                parallelize = True)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             self.assertIsInstance(history, dict)
 
@@ -417,19 +383,16 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
                 pop_size = np.sum(target_genotype.shape)*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5,
-                parallelize = True
-                )
+                parallelize = True)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             self.assertIsInstance(history, dict)
 
@@ -457,20 +420,17 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
                 pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 selection_ops = 'elitism',
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5,
-                parallelize = True
-                )
+                parallelize = True)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
@@ -496,20 +456,17 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
                 pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 selection_ops = 'elitism',
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5,
-                parallelize = True
-                )
+                parallelize = True)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
@@ -538,17 +495,15 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
                 random_init = True
                 )
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 selection_ops = ['elitism', 'roulette'],
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5,
-                parallelize = True
-                )
+                parallelize = True)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(
@@ -574,20 +529,17 @@ class Optimizer_Run_test_parallel(unittest.TestCase):
                 pop_size = target_genotype.size*10,
                 genome_shapes = target_genotype.shape,
                 gene_vals = np.unique(target_genotype),
-                random_init = True
-                )
+                random_init = True)
 
-            new_optimizer = Optimizer(
-                fitness_fn,
-                self.test_runtime_short,
+            new_optimizer = BaseOptimizer(
+                max_iterations = self.test_runtime_short,
                 selection_ops = ['elitism', 'roulette'],
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5,
-                parallelize = True
-                )
+                parallelize = True)
 
-            history = new_optimizer.fit(verbose=0)
+            history = new_optimizer.fit(fitness_fn, verbose=0)
 
             if len(history['max_fitness']) > 1:
                 self.assertLessEqual(

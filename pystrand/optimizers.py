@@ -1,6 +1,8 @@
 import multiprocessing as mp
 import uuid
 
+import numpy as np
+
 from pystrand.populations import BasePopulation
 from pystrand.selections import RouletteSelection, ElitismSelection, BaseSelection
 from pystrand.mutations import BaseMutation, PointMutation
@@ -8,14 +10,15 @@ from pystrand.loggers.csv_logger import CsvLogger
 from pystrand.loggers.details import RunDetails
 
 
-class Optimizer:
+class BaseOptimizer:
     """Base optimizer class.
 
     Parameters
     ----------
     fitness_function : callable
         provides mapping from genotype to fitness value, [0, 1]
-    max_iterations :
+    max_iterations : int
+        0 by default
     population : Population
         Seed population, can include known sub-optimal solutions.
     mutation_prob : float
@@ -40,9 +43,9 @@ class Optimizer:
     """
 
     def __init__(self,
-                 fitness_function,
-                 max_iterations,
                  population,
+                 max_iterations=0,
+                 fitness_function=None,
                  mutation_prob=0.001,
                  mutation_ops=None,
                  crossover_prob=0.0,
@@ -110,10 +113,9 @@ class Optimizer:
                     type(selection_method))
 
     def evaluate_individual(self, individual):
+        """Return fitness value of the given individual.
         """
-        Return fitness value of given individual.
-        """
-        return self._fitness_function(individual)
+        return self._fitness_function(self._model(individual))
 
     def evaluate_population(self):
         """Apply set fitness function to every individual in _population
@@ -131,8 +133,7 @@ class Optimizer:
             evaluated_individuals['fitness'] = [
                 self._fitness_function(individual)
                 for individual
-                in evaluated_individuals['genotype']
-                ]
+                in evaluated_individuals['genotype']]
 
         self._population.replace_individuals(evaluated_individuals)
 
@@ -155,18 +156,24 @@ class Optimizer:
 
         self._population = new_population
 
-    def fit(self, verbose=1):
+    def fit(self, fitnes_function=None, verbose=1):
         """Main training loop.
         Return statistics of the run as dictionary of lists.
 
         Parameters
         ----------
+        fitness_function: Callable
 
         verbose : int
             If not '0' outputs statistics using print every generation.
             Default is 1.
 
         """
+        if fitnes_function:
+            self._fitness_function = fitnes_function
+        elif not self._fitness_function:
+            raise RuntimeError("No fitness function supplied")
+
         run_id = uuid.uuid1()
 
         history = {
@@ -174,8 +181,7 @@ class Optimizer:
             "max_fitness" : [],
             "min_fitness" : [],
             "fitness_avg" : [],
-            "fitness_std" : []
-            }
+            "fitness_std" : []}
 
         iteration = 0
 
@@ -231,3 +237,36 @@ class Optimizer:
         """Return uuid of the optimizer.
         """
         return self._optimizer_uuid
+
+class DataOptimizer(BaseOptimizer):
+    """
+    """
+    def __init__(self, input_size, search_space, **kwargs):
+
+        pop_size = input_size * search_space.size
+
+        population = BasePopulation(
+            pop_size,
+            (input_size,),
+            gene_vals=search_space)
+
+        super().__init__(
+            population,
+            **kwargs)
+
+    def fit(self, training_data, validation_data=None, verbose=1):
+
+        def _generated_fitness_function(values):
+
+            for x, y in training_data:
+                fitness = np.abs(np.poly1d(values)(x)-y)
+
+            fitness = fitness/training_data.shape[0]
+
+            return 1/(1+fitness)
+
+        self._fitness_function = _generated_fitness_function
+
+        return super().fit(
+            fitnes_function=self._fitness_function,
+            verbose=verbose)
