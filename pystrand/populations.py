@@ -33,8 +33,7 @@ class BasePopulation:
                  default_genome=None,
                  seed_individuals=None,
                  **kwargs):
-        """
-        New individuals are not generated if seed_individuals isn't None.
+        """New individuals are not generated if seed_individuals isn't None.
         """
         self._dtype = np.dtype([('fitness', 'd'), ('genotype', 'O')])
         self._gene_values = gene_vals
@@ -71,8 +70,7 @@ class BasePopulation:
 
         Parameters
         ----------
-
-        new_individuals: np.ndarry
+        new_individuals: np.ndarray
             new individuals array
 
         Raises
@@ -86,20 +84,15 @@ class BasePopulation:
             raise TypeError("Invalid dtype of new_individuals ndarrays")
         self._individuals = new_individuals
 
-    def expand_population(
-            self,
-            target_pop_size,
-            strategy='clone'):
-
+    def expand_population(self, target_pop_size, strategy='clone'):
         """Increases number of indivuals in given population.
 
         Parameters
         ----------
-
         target_pop_size : int
             number of individuals we want in population.
-        strategy : string
-            how are the new individuals created.
+        strategy : str
+            Defines how are the new individuals created.
             Two available options are 'clone' and 'random'.
             The 'clone' strategy selects random existing individuals,
             while the 'random' strategy generates new ones.
@@ -134,10 +127,13 @@ class BasePopulation:
         self._individuals = np.append(self._individuals, new_individuals)
 
     def mutate_genotypes(self, mutation_ops):
-        """
-        Applies mutation operators to individuals in order provided.
-        """
+        """Apply mutation operators to individuals in order provided.
 
+        Parameters
+        ----------
+        mutation_ops : list
+            List of mutation operators
+        """
         for genotype in self._individuals['genotype']:
             if not genotype.protected:
                 for mutation_op in mutation_ops:
@@ -147,8 +143,7 @@ class BasePopulation:
             self,
             secondary_population=None,
             crossover_prob=0.0):
-        """
-        Crosses genomes of inidividuals with those in 'secondary_population'.
+        """Crosses genome of inidividuals with those in 'secondary_population'.
 
         Parameters
         ----------
@@ -163,14 +158,19 @@ class BasePopulation:
                     individual = individual.crossover(np.random.choice(secondary_population))
 
     def retrieve_best(self, size=1):
-        """
-        'n' individuals with highest value of fitness are retrieved.
+        """Return 'n' individuals with highest value of fitness.
+
+        Note
+        ----
         Genotype objects don't support comparison, individuals can't be sorted directly.
 
         Parameters
         ----------
-
         size : int
+
+        Returns
+        -------
+        np.ndarray
 
         """
         indices = np.argsort(self._individuals['fitness'])[-size:]
@@ -181,8 +181,12 @@ class BasePopulation:
             dtype=self._dtype)
 
     def append_individuals(self, new_individuals):
-        """
-        Appends array of 'new_individuals' to existing individuals managed by Population.
+        """Append array of 'new_individuals' to existing
+        individuals managed by the Population object.
+
+        Parameters
+        ----------
+        new_individuals : np.ndarray
 
         Raises
         ------
@@ -197,56 +201,48 @@ class BasePopulation:
     #Properties for easier retrieval of frequently used values.
     @property
     def population_size(self):
-        """
-        Return size of _individuals ndarray as an integer.
+        """Return size of _individuals ndarray as an integer.
         """
         return self._individuals.size
 
     @property
     def genome_shapes(self):
-        """
-        Return _genome_shapes list.
+        """Return _genome_shapes list.
         """
         return self._genome_shapes
 
     @property
     def gene_values(self):
-        """
-        Return _gene_values.
+        """Return _gene_values.
         """
         return self._gene_values
 
     @property
     def individuals(self):
-        """
-        Return _individuals ndarray.
+        """Return _individuals ndarray.
         """
         return self._individuals
 
     @property
     def avg_fitness(self):
-        """
-        Return average fitness as float.
+        """Return average fitness as float.
         """
         return np.average([genotype['fitness'] for genotype in self._individuals])
 
     @property
     def max_fitness(self):
-        """
-        Return max fitness as float.
+        """Return max fitness as float.
         """
         return np.max([genotype['fitness'] for genotype in self._individuals])
 
     @property
     def min_fitness(self):
-        """
-        Return min fitness as float.
+        """Return min fitness as float.
         """
         return np.min([genotype['fitness'] for genotype in self._individuals])
 
     @property
     def fitness_std(self):
-        """
-        Return standard deviation of fitness as float.
+        """Return standard deviation of fitness as float.
         """
         return np.std([genotype['fitness'] for genotype in self._individuals])

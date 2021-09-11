@@ -105,7 +105,7 @@ class Genotype(np.ndarray):
         ----------
 
         partner_genotype : Genotype
-        mask : array like
+        mask : np.ndarray
             determines which genes (symbols) are selected from parents.
             If left as 'None' the mask is randomized each time.
             Thus impacting performance.
@@ -121,36 +121,31 @@ class Genotype(np.ndarray):
 
     @property
     def gene_vals(self):
-        """
-        Return _gene_vals.
+        """Return _gene_vals.
         """
         return self._gene_vals
 
     @property
     def fitness(self):
-        """
-        Return _genotype_fitness attribute.
+        """Return _genotype_fitness attribute.
         """
         return self._genotype_fitness
 
     @property
     def protected(self):
-        """
-        Return _protected attribute.
+        """Return _protected attribute.
         """
         return self._protected
 
     @protected.setter
     def protected(self, new_value):
-        """
-        Set _protected attribute/flag of the genotype.
+        """Set _protected attribute/flag of the genotype.
         If _protected is `True` the genotype will not be altered by operators.
         """
         self._protected = new_value
 
     def set_fitness(self, new_fitness):
-        """
-        Set fitness of the genotype directly.
+        """Set fitness of the genotype directly.
 
         Raises
         ------

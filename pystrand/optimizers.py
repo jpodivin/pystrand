@@ -1,8 +1,6 @@
 import multiprocessing as mp
 import uuid
 
-import numpy as np
-
 from pystrand.populations import BasePopulation
 from pystrand.selections import RouletteSelection, ElitismSelection, BaseSelection
 from pystrand.mutations import BaseMutation, PointMutation
@@ -15,8 +13,8 @@ class BaseOptimizer:
 
     Parameters
     ----------
-    fitness_function : callable
-        provides mapping from genotype to fitness value, [0, 1]
+    fitness_function : BaseFunction
+        provides mapping from genotype to a fitness value, [0, 1]
     max_iterations : int
         0 by default
     population : Population
@@ -32,7 +30,8 @@ class BaseOptimizer:
     selection_ops :
     selected_fraction :
     log_path :
-    parallelize :
+    parallelize : bool
+        Use multiprocessing to evaluate genomes in parallel?
 
     Raises
     ------
@@ -162,7 +161,7 @@ class BaseOptimizer:
 
         Parameters
         ----------
-        fitness_function: Callable
+        fitness_function: BaseFunction
 
         verbose : int
             If not '0' outputs statistics using print every generation.
@@ -237,36 +236,3 @@ class BaseOptimizer:
         """Return uuid of the optimizer.
         """
         return self._optimizer_uuid
-
-class DataOptimizer(BaseOptimizer):
-    """
-    """
-    def __init__(self, input_size, search_space, **kwargs):
-
-        pop_size = input_size * search_space.size
-
-        population = BasePopulation(
-            pop_size,
-            (input_size,),
-            gene_vals=search_space)
-
-        super().__init__(
-            population,
-            **kwargs)
-
-    def fit(self, training_data, validation_data=None, verbose=1):
-
-        def _generated_fitness_function(values):
-
-            for x, y in training_data:
-                fitness = np.abs(np.poly1d(values)(x)-y)
-
-            fitness = fitness/training_data.shape[0]
-
-            return 1/(1+fitness)
-
-        self._fitness_function = _generated_fitness_function
-
-        return super().fit(
-            fitnes_function=self._fitness_function,
-            verbose=verbose)

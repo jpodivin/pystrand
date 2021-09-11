@@ -13,6 +13,7 @@
 import os
 import sys
 import datetime
+
 sys.path.insert(0, os.path.abspath('../pystrand'))
 
 
@@ -45,3 +46,5 @@ templates_path = ['_templates']
 # This pattern also affects html_statt-----------------------------------------
 
 html_theme = "classic"
+
+autodoc_mock_imports = ['pandas', 'numpy']

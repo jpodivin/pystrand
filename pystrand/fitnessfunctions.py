@@ -1,8 +1,10 @@
-"""
+"""Fitness function and metrics for use by the Optimizer classes.
 """
 import numpy as np
 
 class MSELoss:
+    """Simple MSE function.
+    """
     def __call__(self, y, yprime):
         return np.square(np.subtract(yprime, y)).mean()
 
@@ -19,9 +21,23 @@ class BaseFunction:
 
     def __call__(self, values):
         """Evaluate function and increment evaluation counter.
+        Interface is common to all subclasses of `BaseFunction`,
+        the heavy lifting is performed by the __evaluate__ method.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Genotype submitted for evaluation
+
+        Returns
+        -------
+        float
+            Range depends on the specifics of the function,
+            but most usually corresponds to <0,1>
         """
         evaluation = self.__evaluate__(values)
         self._evaluated += 1
+
         if self.inverted:
             evaluation = 1 / (1 + evaluation)
 
@@ -30,10 +46,17 @@ class BaseFunction:
     def __evaluate__(self, values):
         """Evaluate the function at a given point.
         Return results.
-        :param values: function input
-        :type values: numpy array
 
-        :rtype: float
+        Parameters
+        ----------
+        values : np.ndarray
+            Genotype submitted for evaluation
+
+        Returns
+        -------
+        float
+            Range depends on the specifics of the function,
+            but most usually corresponds to <0,1>
         """
         return 0.0
 
@@ -43,7 +66,14 @@ class BaseFunction:
         Implementation of this method depends on properties
         of the tested function.
 
-        :rtype: bool
+        Parameters
+        ----------
+        values : np.ndarray
+            Genotype submitted for evaluation
+
+        Returns
+        -------
+        bool
         """
         return False
 
@@ -57,10 +87,14 @@ class BaseFunction:
         """Check if provided values represent one of the
         known optimal values.
 
-        :param values: function input
-        :type values: numpy array
+        Parameters
+        ----------
+        values : np.ndarray
+            Genotype submitted for evaluation
 
-        :rtype: bool
+        Returns
+        -------
+        bool
         """
         return self._optima(values)
 
@@ -81,7 +115,8 @@ class SquashedDimsFunction(BaseFunction):
 
 
 class DataFitnessFn(BaseFunction):
-    """
+    """Measure fitness of genome evaluated as list of coeficients for
+    a power series polynomial.
     """
 
     def __init__(self, inverted=False, metric='mse'):
@@ -93,6 +128,7 @@ class DataFitnessFn(BaseFunction):
 
     def __evaluate__(self, values):
 
+        
         phenotype = np.polynomial.Polynomial(values)
         predictions = [phenotype(sample) for sample in self.data]
 
