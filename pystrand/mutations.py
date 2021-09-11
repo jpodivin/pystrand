@@ -3,13 +3,11 @@
 import numpy as np
 
 class BaseMutation:
-    """
-    Defines base mutation operator.
+    """Defines base mutation operator.
     Returning genotype unchanged.
 
     Parameters
     ----------
-
     probability : float
         Probability of changing random element of genotype.
         Default is 0.0
@@ -32,7 +30,6 @@ class BaseMutation:
 
         Parameters
         ----------
-
         genotype : Genotype
             Genotype has to have size > 0 and generated random number has to be
             greater than preset threshold.
@@ -43,12 +40,10 @@ class BaseMutation:
             and self._random_generator.random() > self._mutation_probability)
 
     def __call__(self, genotype):
-        """
-        Pass genotype to the __mutate__ method.
+        """Pass genotype to the __mutate__ method.
 
         Parameters
         ----------
-
         genotype : Genotype
 
         """
@@ -63,7 +58,6 @@ class PointMutation(BaseMutation):
 
     Parameters
     ----------
-
     probability : float
         Probability of changing random element of genotype.
         Default is 0.0
@@ -87,13 +81,11 @@ class PointMutation(BaseMutation):
 
 
 class BlockMutation(BaseMutation):
-    """
-    Defines block mutation operator. Subclasses the BaseMutation.
+    """Defines block mutation operator. Subclasses the BaseMutation.
     Changing several elements of the genotype at the same time, with given probability.
 
     Parameters
     ----------
-
     probability : float
         Probability of changing random block of genotype elements.
         Default is 0.0
@@ -121,14 +113,12 @@ class BlockMutation(BaseMutation):
 
 
 class PermutationMutation(BaseMutation):
-
     """Defines Permutation mutation operator.
     Operator reorders elements of the genotype, either symbols
     or subarrays, along the given axis, with set probability.
 
     Parameters
     ----------
-
     probability : float
         Probability of genotype undergoing permutation.
         Default is 0.0
@@ -146,7 +136,6 @@ class PermutationMutation(BaseMutation):
     Unlike other mutation operators, permutation can not introduce new
     symbols, or genes, into genotype. And has to be used in conjunction with
     other operators capable of doing so. In order to be useful.
-
     """
     def __init__(self, probability=0.0, axis=0):
         """Set probability for Permutation mutation
@@ -163,17 +152,14 @@ class PermutationMutation(BaseMutation):
 
 
 class ShiftMutation(BaseMutation):
-
-    """
-    Defines Shift mutation operator.
+    """Defines Shift mutation operator.
     Flattened genotype array is shifted to the right by a chosen
     number of positions. Same number of leftmost positions of the
     flattened genotype is filled with symbols, randomly chosen
     from genotypes gene_vals.
 
-    Parameters:
-    -----------
-
+    Parameters
+    ----------
     probability : float
         Probability of changing random block of genotype elements.
         Default is 0.0
@@ -181,7 +167,6 @@ class ShiftMutation(BaseMutation):
         Number of places we want to shift right on the flattened genotype.
         Same number of symbols on the left side of the flattened genotype
         are replaced by randomly selected symbols from gene_vals.
-
     """
     def __init__(self, probability=0.0, shift_scale=1):
         self._shift_scale = shift_scale

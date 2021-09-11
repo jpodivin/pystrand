@@ -8,14 +8,15 @@ from pystrand.loggers.csv_logger import CsvLogger
 from pystrand.loggers.details import RunDetails
 
 
-class Optimizer:
+class BaseOptimizer:
     """Base optimizer class.
 
     Parameters
     ----------
-    fitness_function : callable
-        provides mapping from genotype to fitness value, [0, 1]
-    max_iterations :
+    fitness_function : BaseFunction
+        provides mapping from genotype to a fitness value, [0, 1]
+    max_iterations : int
+        0 by default
     population : Population
         Seed population, can include known sub-optimal solutions.
     mutation_prob : float
@@ -29,7 +30,8 @@ class Optimizer:
     selection_ops :
     selected_fraction :
     log_path :
-    parallelize :
+    parallelize : bool
+        Use multiprocessing to evaluate genomes in parallel?
 
     Raises
     ------
@@ -40,9 +42,9 @@ class Optimizer:
     """
 
     def __init__(self,
-                 fitness_function,
-                 max_iterations,
                  population,
+                 max_iterations=0,
+                 fitness_function=None,
                  mutation_prob=0.001,
                  mutation_ops=None,
                  crossover_prob=0.0,
@@ -110,10 +112,9 @@ class Optimizer:
                     type(selection_method))
 
     def evaluate_individual(self, individual):
+        """Return fitness value of the given individual.
         """
-        Return fitness value of given individual.
-        """
-        return self._fitness_function(individual)
+        return self._fitness_function(self._model(individual))
 
     def evaluate_population(self):
         """Apply set fitness function to every individual in _population
@@ -131,8 +132,7 @@ class Optimizer:
             evaluated_individuals['fitness'] = [
                 self._fitness_function(individual)
                 for individual
-                in evaluated_individuals['genotype']
-                ]
+                in evaluated_individuals['genotype']]
 
         self._population.replace_individuals(evaluated_individuals)
 
@@ -155,18 +155,24 @@ class Optimizer:
 
         self._population = new_population
 
-    def fit(self, verbose=1):
+    def fit(self, fitnes_function=None, verbose=1):
         """Main training loop.
         Return statistics of the run as dictionary of lists.
 
         Parameters
         ----------
+        fitness_function: BaseFunction
 
         verbose : int
             If not '0' outputs statistics using print every generation.
             Default is 1.
 
         """
+        if fitnes_function:
+            self._fitness_function = fitnes_function
+        elif not self._fitness_function:
+            raise RuntimeError("No fitness function supplied")
+
         run_id = uuid.uuid1()
 
         history = {
@@ -174,8 +180,7 @@ class Optimizer:
             "max_fitness" : [],
             "min_fitness" : [],
             "fitness_avg" : [],
-            "fitness_std" : []
-            }
+            "fitness_std" : []}
 
         iteration = 0
 

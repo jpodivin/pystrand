@@ -6,6 +6,21 @@ pystrand package
    :undoc-members:
    :show-inheritance:
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   pystrand.models
+   pystrand.genotypes
+   pystrand.mutations
+   pystrand.optimizers
+   pystrand.populations
+   pystrand.selections
+   pystrand.fitnessfunctions
+
+
 Subpackages
 -----------
 
@@ -13,15 +28,3 @@ Subpackages
    :maxdepth: 4
 
    pystrand.loggers
-
-Submodules
-----------
-
-.. toctree::
-   :maxdepth: 4
-
-   pystrand.genotypes
-   pystrand.mutations
-   pystrand.optimizers
-   pystrand.populations
-   pystrand.selections

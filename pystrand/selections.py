@@ -21,9 +21,12 @@ class BaseSelection:
 
         Parameters
         ----------
-
         population : Population
             Population on which the operator will be applied.
+
+        Returns
+        -------
+        np.ndarray
         """
         return np.array(
             self.__select__(population),
