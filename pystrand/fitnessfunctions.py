@@ -128,7 +128,6 @@ class DataFitnessFn(BaseFunction):
 
     def __evaluate__(self, values):
 
-        
         phenotype = np.polynomial.Polynomial(values)
         predictions = [phenotype(sample) for sample in self.data]
 
