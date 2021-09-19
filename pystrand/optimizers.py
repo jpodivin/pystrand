@@ -114,12 +114,12 @@ class BaseOptimizer:
     def evaluate_individual(self, individual):
         """Return fitness value of the given individual.
         """
-        return self._fitness_function(self._model(individual))
+        return self._fitness_function(individual)
 
     def evaluate_population(self):
         """Apply set fitness function to every individual in _population
         in either sequential or parallel manner depending on value of
-        _paralelize attribute. And store result in the 'fitness' field.
+        the _paralelize attribute. And store result in the 'fitness' field.
         """
         evaluated_individuals = self._population.individuals
         if self._parallelize:
