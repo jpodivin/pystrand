@@ -131,11 +131,12 @@ class Optimizer_Run_test_sequential(unittest.TestCase):
 
             new_optimizer = BaseOptimizer(
                 max_iterations = self.test_runtime_short,
+                fitness_function=fitness_fn,
                 population = population,
                 mutation_prob = 0.1,
                 crossover_prob = 0.5)
 
-            history = new_optimizer.fit(fitness_fn, verbose=0)
+            history = new_optimizer.fit(verbose=0)
 
             self.assertIsInstance(history, dict)
 

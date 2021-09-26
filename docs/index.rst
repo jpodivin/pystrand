@@ -13,6 +13,7 @@ Welcome to pystrand's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   low_level_api_guide
    license
    api/modules
 
