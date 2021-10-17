@@ -72,3 +72,15 @@ class BaseModel:
         x : np.ndarray
         """
         raise NotImplementedError
+
+    @property
+    def optimizer(self):
+        """Return model optimizer.
+        """
+        return self._optimizer
+
+    @property
+    def solution(self):
+        """Return best performing candidate solution.
+        """
+        return self._optimizer.population.retrieve_best()[0]

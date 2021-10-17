@@ -49,9 +49,3 @@ class PowerPolyModel(BaseModel):
         pol = np.polynomial.Polynomial(genotype)
         val = pol(x)
         return val
-
-    @property
-    def optimizer(self):
-        """Return model optimizer.
-        """
-        return self._optimizer
