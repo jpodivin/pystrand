@@ -22,7 +22,7 @@ class TestPolyModel(unittest.TestCase):
     def test_model_init(self):
         for domain in self.gene_domains:
             model = models.PowerPolyModel(domain)
-            expected_pop_size = min(int(np.around(np.sum(np.abs(domain)))), 1000)
+            expected_pop_size = 100
             self.assertIsInstance(model.optimizer, opt.BaseOptimizer)
             self.assertEqual(model.optimizer.population.population_size, expected_pop_size)
             self.assertEqual(len(model.optimizer.population.genome_shapes), expected_pop_size)

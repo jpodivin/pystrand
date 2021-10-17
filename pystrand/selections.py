@@ -26,7 +26,7 @@ class BaseSelection:
 
         Returns
         -------
-        np.ndarray
+        np.ndarray : array of individuals
         """
         return np.array(
             self.__select__(population),

@@ -14,25 +14,6 @@ class PowerPolyModel(BaseModel):
         super().__init__(gene_domain, population_size=population_size, **kwargs)
         self._fitness_fn = fn.DataFitnessFn(inverted=inverted_fitness)
 
-    def _infer_pop_params(self, domain):
-        """Guess general model parameters using heuristic
-
-        Parameters
-        ----------
-        domain : np.ndarray
-
-        Returns
-        -------
-        dict
-            Dictionary of inferred model parameters.
-        """
-        params = {}
-        params['pop_size'] = min(
-            int(np.around(np.sum(np.abs(domain)))), 1000)
-        params['genome_shapes'] = (min(len(domain), 10), )
-        params['gene_vals'] = domain
-        return params
-
     def fit(self, X, y, **kwargs):
         """Fit polynomial genetic algorithm model
 
@@ -68,9 +49,3 @@ class PowerPolyModel(BaseModel):
         pol = np.polynomial.Polynomial(genotype)
         val = pol(x)
         return val
-
-    @property
-    def optimizer(self):
-        """Return model optimizer.
-        """
-        return self._optimizer
