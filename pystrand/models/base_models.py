@@ -19,7 +19,8 @@ class BaseModel:
 
         genome_shapes = kwargs.get('genome_shapes', inferred_parameters['genome_shapes'])
         gene_vals = kwargs.get('gene_vals', inferred_parameters['gene_vals'])
-        parallelize = kwargs.get('parallelize', True)
+        kwargs['parallelize'] = kwargs.get('parallelize', True)
+        max_iterations = kwargs.pop('max_iterations', 0)
 
         population = BasePopulation(
             population_size,
@@ -28,15 +29,30 @@ class BaseModel:
 
         self._optimizer = BaseOptimizer(
             population,
-            max_iterations=kwargs.get('max_iterations'),
-            parallelize=parallelize)
+            max_iterations=max_iterations,
+            **kwargs)
 
         self._fitness_fn = None
 
     def _infer_pop_params(self, domain):
         """Guess general model parameters using heuristic
+
+        Parameters
+        ----------
+        domain : np.ndarraytest_samples
+
+        Returns
+        -------
+        dict
+            Dictionary of inferred model parameters.
         """
-        raise NotImplementedError
+        params = {
+            'pop_size': 100,
+            'genome_shapes': (min(len(domain), 10),),
+            'gene_vals': domain
+        }
+
+        return params
 
     def fit(self, X, y=None, **kwargs):
         """Fit genetic algorithm model
