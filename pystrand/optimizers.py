@@ -2,8 +2,8 @@ import multiprocessing as mp
 import uuid
 
 from pystrand.populations import BasePopulation
-from pystrand.selections import RouletteSelection, ElitismSelection, BaseSelection
-from pystrand.mutations import BaseMutation, PointMutation
+from pystrand.operators.selections import RouletteSelection, ElitismSelection, BaseSelection
+from pystrand.operators.mutations import BaseMutation, PointMutation
 from pystrand.loggers.csv_logger import CsvLogger
 from pystrand.loggers.details import RunDetails
 
