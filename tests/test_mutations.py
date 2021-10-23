@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from pystrand.genotypes import Genotype
-import pystrand.mutations as mut
+import pystrand.operators.mutations as mut
 
 test_genotypes = {}
 test_shapes = [

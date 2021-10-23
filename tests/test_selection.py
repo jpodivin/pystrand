@@ -1,5 +1,5 @@
 import unittest
-from pystrand.selections import *
+from pystrand.operators.selections import *
 from pystrand.populations import BasePopulation
 from pystrand.genotypes import Genotype
 
