@@ -1,10 +1,10 @@
 """Pystrand main module.
 """
 
-from pystrand import genotypes
-from pystrand import models
-from pystrand import optimizers
-from pystrand import populations
-from pystrand import loggers
-from pystrand import operators
+from . import genotypes
+from . import models
+from . import optimizers
+from . import populations
+from . import loggers
+from . import operators
 
