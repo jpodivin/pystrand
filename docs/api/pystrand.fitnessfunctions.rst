@@ -1,5 +1,5 @@
 pystrand.fitnessfunctions module
-=========================
+================================
 
 .. automodule:: pystrand.fitnessfunctions
    :members:

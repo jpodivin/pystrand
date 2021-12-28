@@ -35,8 +35,15 @@ release = '0.0.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',
+    'sphinxcontrib.apidoc', 
 ]
+
+#Apidoc config
+apidoc_module_dir = '../pystrand'
+apidoc_output_dir = 'api'
+apidoc_excluded_paths = []
+apidoc_separate_modules = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
