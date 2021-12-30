@@ -184,7 +184,7 @@ class BaseOptimizer:
 
         iteration = 0
 
-        while iteration < self._max_iterations:
+        while iteration != self._max_iterations:
             try:
                 self.evaluate_population()
             except mp.TimeoutError as timeoutException:

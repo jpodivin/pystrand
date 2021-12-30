@@ -1,4 +1,4 @@
-"""Polynomial model classes.
+"""Polynomial model classes 
 """
 
 import numpy as np
