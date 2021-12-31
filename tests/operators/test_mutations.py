@@ -2,9 +2,17 @@ import unittest
 import numpy as np
 from pystrand.genotypes import Genotype
 import pystrand.operators.mutations as mut
-
+"""Tests for mutation operators.
+All tests use the same Genotype definition array,
+so there is a considerable degree of code duplication.
+Nevertheless, it is better to keep things explicit.
+"""
 
 class TestMutation(unittest.TestCase):
+    """Base class of mutation operator tests.
+    Doesn't include any tests by itself, only defines
+    shared setUp function for all the others.
+    """
 
     def setUp(self):
 
@@ -31,10 +39,8 @@ class TestMutation(unittest.TestCase):
 
 
 class TestPointMutation(TestMutation):
-
-    def setUp(self):
-        
-        super(TestPointMutation, self).setUp()
+    """Tests of the point mutation operator.
+    """
 
     def test_genotype_mutation_bounds(self):
         """Checks operation of mutation operator.
@@ -55,9 +61,8 @@ class TestPointMutation(TestMutation):
 
 
 class TestBlockMutation(TestMutation):
-
-    def setUp(self):
-        super(TestBlockMutation, self).setUp()
+    """Tests of the block mutation operator.
+    """
 
     def test_genotype_mutation_bounds(self):
         """
@@ -78,9 +83,8 @@ class TestBlockMutation(TestMutation):
                 genome['genotype'].min() >= genome['gene_vals'].min())
 
 class TestPermutationMutation(TestMutation):
-
-    def setUp(self):
-        super(TestPermutationMutation, self).setUp()
+    """Tests of the Permutation mutation operator.
+    """
 
     def test_genotype_mutation_bounds(self):
         """
@@ -101,9 +105,8 @@ class TestPermutationMutation(TestMutation):
                 genome['genotype'].min() >= genome['gene_vals'].min())
 
 class TestShiftMutation(TestMutation):
-
-    def setUp(self):
-        super(TestShiftMutation, self).setUp()
+    """Tests of the Shift mutation operator
+    """
 
     def test_genotype_mutation_bounds(self):
         """Checks operation of mutation operator.

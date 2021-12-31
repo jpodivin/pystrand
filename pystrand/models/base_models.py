@@ -54,7 +54,7 @@ class BaseModel:
 
         return params
 
-    def fit(self, X, y=None, **kwargs):
+    def fit(self, X, y, **kwargs):
         """Fit genetic algorithm model
 
         Parameters
@@ -84,3 +84,9 @@ class BaseModel:
         """Return best performing candidate solution.
         """
         return self._optimizer.population.retrieve_best()[0]
+
+    @property
+    def get_population(self):
+        """Return entire population of candidate solutions.
+        """
+        return self._optimizer.population

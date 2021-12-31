@@ -1,4 +1,4 @@
-"""Polynomial model classes 
+"""Polynomial model classes
 """
 
 import numpy as np
@@ -45,7 +45,7 @@ class PowerPolyModel(BaseModel):
         float
             Evaluation of the modelled polynomial.
         """
-        genotype = self.optimizer.population.retrieve_best()[0]['genotype']
+        genotype = self.solution['genotype']
         pol = np.polynomial.Polynomial(genotype)
         val = pol(x)
         return val
