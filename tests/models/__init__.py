@@ -1,2 +1,2 @@
-"""Models test classes.
+"""Tests for pystrand.models
 """

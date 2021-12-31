@@ -1,7 +1,6 @@
 import unittest
 import numpy as np
 from pystrand.genotypes import Genotype
-from pystrand.operators.mutations import PointMutation
 
 
 class Test_genotype_manipulation(unittest.TestCase):
