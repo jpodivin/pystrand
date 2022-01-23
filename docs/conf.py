@@ -36,7 +36,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
-    'sphinxcontrib.apidoc', 
+    'sphinxcontrib.apidoc',
 ]
 
 #Apidoc config
