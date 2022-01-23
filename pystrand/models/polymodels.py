@@ -12,7 +12,7 @@ class PowerPolyModel(BaseModel):
                  inverted_fitness=True, **kwargs):
 
         super().__init__(gene_domain, population_size=population_size, **kwargs)
-        self._fitness_fn = fn.DataFitnessFn(inverted=inverted_fitness)
+        self._fitness_fn = fn.PowerPolyFitnessFn(inverted=inverted_fitness)
 
     def fit(self, X, y, **kwargs):
         """Fit polynomial genetic algorithm model

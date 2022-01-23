@@ -115,22 +115,50 @@ class SquashedDimsFunction(BaseFunction):
 
 
 class DataFitnessFn(BaseFunction):
-    """Measure fitness of genome evaluated as list of coeficients for
-    a power series polynomial.
+    """Measure fitness of with against supplied samples and labels.
     """
 
-    def __init__(self, inverted=False, metric='mse'):
+    def __init__(self, inverted=False, metric='mse', **kwargs):
 
         self._metric = METRICS[metric]
-        self.data = None
-        self.labels = None
-        super().__init__(inverted=inverted)
+        self.data = []
+        self.labels = []
+        super().__init__(inverted=inverted, **kwargs)
 
     def __evaluate__(self, values):
 
-        phenotype = np.polynomial.Polynomial(values)
+        phenotype = self._get_phenotype(values)
         predictions = [phenotype(sample) for sample in self.data]
 
         fitness = self._metric(predictions, self.labels)
 
         return fitness
+
+    def _get_phenotype(self, genotype):
+        """Return phenotype representation of given genotype.
+
+        Parameters
+        ----------
+        genotype : np.ndarray
+            Genotype submitted for evaluation
+
+        Returns
+        -------
+        Evaluable phenotype
+        """
+
+        raise NotImplementedError()
+
+
+class PowerPolyFitnessFn(DataFitnessFn):
+    """Measure fitness of genome evaluated as list of coeficients for
+    a power series polynomial.
+    """
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+    def _get_phenotype(self, genotype):
+        phenotype = np.polynomial.Polynomial(genotype)
+        return phenotype
