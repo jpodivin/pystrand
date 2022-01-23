@@ -8,8 +8,15 @@ class MSELoss:
     def __call__(self, y, yprime):
         return np.square(np.subtract(yprime, y)).mean()
 
+class MAXLoss:
+    """Simple Max function.
+    """
+    def __call__(self, y, yprime):
+        return np.abs(np.subtract(yprime, y)).max()
+
 METRICS = {
-    'mse': MSELoss()
+    'mse': MSELoss(),
+    'max': MAXLoss(),
 }
 
 class BaseFunction:
