@@ -6,13 +6,11 @@
 Welcome to pystrand's documentation!
 ====================================
 
-.. include:: ../README.md
-
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   examples
    license
    api/modules
 
