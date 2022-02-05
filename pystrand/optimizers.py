@@ -45,9 +45,9 @@ class BaseOptimizer:
                  population,
                  max_iterations=0,
                  fitness_function=None,
-                 mutation_prob=0.001,
+                 mutation_prob=0.01,
                  mutation_ops=None,
-                 crossover_prob=0.0,
+                 crossover_prob=0.5,
                  selection_ops='roulette',
                  selected_fraction=0.1,
                  log_path=None,
@@ -184,7 +184,7 @@ class BaseOptimizer:
 
         iteration = 0
 
-        while iteration < self._max_iterations:
+        while iteration != self._max_iterations:
             try:
                 self.evaluate_population()
             except mp.TimeoutError as timeoutException:

@@ -1,4 +1,4 @@
-"""Polynomial model classes.
+"""Polynomial model classes
 """
 
 import numpy as np
@@ -12,7 +12,7 @@ class PowerPolyModel(BaseModel):
                  inverted_fitness=True, **kwargs):
 
         super().__init__(gene_domain, population_size=population_size, **kwargs)
-        self._fitness_fn = fn.DataFitnessFn(inverted=inverted_fitness)
+        self._fitness_fn = fn.PowerPolyFitnessFn(inverted=inverted_fitness)
 
     def fit(self, X, y, **kwargs):
         """Fit polynomial genetic algorithm model
@@ -45,7 +45,7 @@ class PowerPolyModel(BaseModel):
         float
             Evaluation of the modelled polynomial.
         """
-        genotype = self.optimizer.population.retrieve_best()[0]['genotype']
+        genotype = self.solution['genotype']
         pol = np.polynomial.Polynomial(genotype)
         val = pol(x)
         return val

@@ -1,14 +1,14 @@
 """Basic model classes
-The most general models are defined here.
-More specialized cases are to be placed in separate submodules.
+The most general mode API is defined here.
+More specialized cases are placed in separate submodules.
 """
 from pystrand.populations import BasePopulation
 from pystrand.optimizers import BaseOptimizer
 
 class BaseModel:
     """Basic genetic algorithm model.
-    Defines API for derived model classes, but isn't inteded for actual
-    use as the key methods are to be implemented in the subclasses.
+    Defines general API for models, but isn't inteded for actual
+    use as the key methods are left to be implemented in the subclasses.
     """
     def __init__(self, gene_domain, population_size=None, **kwargs):
 
@@ -20,7 +20,7 @@ class BaseModel:
         genome_shapes = kwargs.get('genome_shapes', inferred_parameters['genome_shapes'])
         gene_vals = kwargs.get('gene_vals', inferred_parameters['gene_vals'])
         kwargs['parallelize'] = kwargs.get('parallelize', True)
-        max_iterations = kwargs.pop('max_iterations', 0)
+        max_iterations = kwargs.pop('max_iterations', -1)
 
         population = BasePopulation(
             population_size,
@@ -54,7 +54,7 @@ class BaseModel:
 
         return params
 
-    def fit(self, X, y=None, **kwargs):
+    def fit(self, X, y, **kwargs):
         """Fit genetic algorithm model
 
         Parameters
@@ -62,7 +62,7 @@ class BaseModel:
         X : np.ndarray
         y : np.ndarray
         """
-        return self._optimizer.fit(self._fitness_fn, kwargs.get('verbose', 1))
+        raise NotImplementedError()
 
     def predict(self, x):
         """Evaluate vector 'x'
@@ -71,7 +71,7 @@ class BaseModel:
         ----------
         x : np.ndarray
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @property
     def optimizer(self):
@@ -84,3 +84,9 @@ class BaseModel:
         """Return best performing candidate solution.
         """
         return self._optimizer.population.retrieve_best()[0]
+
+    @property
+    def get_population(self):
+        """Return entire population of candidate solutions.
+        """
+        return self._optimizer.population
