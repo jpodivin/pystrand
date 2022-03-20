@@ -9,9 +9,13 @@ class PowerPolyModel(BaseModel):
     """Model as a power series polynomial with coeficients equivalent to genes.
     """
     def __init__(self, gene_domain, population_size=None,
-                 inverted_fitness=True, **kwargs):
+                 inverted_fitness=True, crossover_prob=0.5, **kwargs):
 
-        super().__init__(gene_domain, population_size=population_size, **kwargs)
+        super().__init__(
+            gene_domain,
+            population_size=population_size,
+            crossover_prob=crossover_prob, **kwargs)
+
         self._fitness_fn = fn.PowerPolyFitnessFn(inverted=inverted_fitness)
 
     def fit(self, X, y, **kwargs):

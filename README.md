@@ -30,9 +30,18 @@ and maximum allowed runtime. This is particulary useful if we are looking for ap
  >>> model = PowerPolyModel(domain, population_size=500, max_iterations=1000, crossover_prob=0.5)
 ```
 
+We can also initialize the model with no constraints on the behavior of the algorithm, which will
+set parameters to pre-determined defaults.
+The only required parameter is the domain of gene values.
+
+```
+ >>> model = PowerPolyModel(domain)
+```
+
 Model is then fitted on provided data. 
 ```
    >>>model.fit(x, y, verbose=0)
    >>>model.solution
    ... (1., Genotype([5., 5., 2., 0., 0., 0., 0., 0., 0., 0.]))
 ```
+
