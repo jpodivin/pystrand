@@ -47,7 +47,7 @@ class BaseModel:
             Dictionary of inferred model parameters.
         """
         params = {
-            'pop_size': 100,
+            'pop_size': 1000,
             'genome_shapes': (min(len(domain), 10),),
             'gene_vals': domain
         }
