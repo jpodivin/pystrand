@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pystrand"
 version = "0.1.0"
-description = ""
+description = "Python genetic algorithm package"
 authors = ["Jiri Podivin <jpodivin@gmail.com>"]
 license = "BSD 3-Clause License"
 
