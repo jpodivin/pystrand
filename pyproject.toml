@@ -3,7 +3,9 @@ name = "pystrand"
 version = "0.1.0"
 description = "Python genetic algorithm package"
 authors = ["Jiri Podivin <jpodivin@gmail.com>"]
+readme = "README.md"
 license = "BSD 3-Clause License"
+packages = [{include="pystrand"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
