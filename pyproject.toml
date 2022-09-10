@@ -9,8 +9,8 @@ packages = [{include="pystrand"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pandas = "^1.4.4"
-numpy = "^1.23.2"
+pandas = "^1.2.0"
+numpy = "^1.18.5"
 
 [tool.poetry.group.test]
 optional = true
