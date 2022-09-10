@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pystrand",
-    version="0.0.1",
+    version="0.1.0",
     author="Jiri Podivin",
     author_email="jpodivin@gmail.com",
     description="Python genetic algorithm package",

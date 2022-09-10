@@ -4,13 +4,18 @@ version = "0.1.0"
 description = "Python genetic algorithm package"
 authors = ["Jiri Podivin <jpodivin@gmail.com>"]
 readme = "README.md"
-license = "BSD 3-Clause License"
+license = "BSD-3-Clause"
 packages = [{include="pystrand"}]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Life"
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pandas = "^1.4.4"
-numpy = "^1.23.2"
+pandas = "^1.2.0"
+numpy = "^1.18.5"
 
 [tool.poetry.group.test]
 optional = true
