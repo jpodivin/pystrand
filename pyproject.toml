@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pystrand"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python genetic algorithm package"
 authors = ["Jiri Podivin <jpodivin@gmail.com>"]
 readme = "README.md"
