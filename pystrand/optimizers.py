@@ -52,6 +52,7 @@ class BaseOptimizer:
                  selected_fraction=0.1,
                  log_path=None,
                  parallelize=False,
+                 random_state=None,
                  **kwargs):
         """For each element in list of selection methods we check the type.
         Only Selection and string are accepted, other types raise TypeError.
@@ -97,9 +98,9 @@ class BaseOptimizer:
         for selection_method in selection_ops:
             if isinstance(selection_method, str):
                 if selection_method == 'roulette':
-                    self._selection_methods += [RouletteSelection(selected_fraction)]
+                    self._selection_methods += [RouletteSelection(selected_fraction, random_state=random_state)]
                 elif selection_method == 'elitism':
-                    self._selection_methods += [ElitismSelection(selected_fraction)]
+                    self._selection_methods += [ElitismSelection(selected_fraction, random_state=random_state)]
                 else:
                     raise ValueError(
                         'Unknown selection algorithm name.',

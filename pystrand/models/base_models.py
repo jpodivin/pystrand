@@ -5,7 +5,9 @@ More specialized cases are placed in separate submodules.
 from pystrand.populations import BasePopulation
 from pystrand.optimizers import BaseOptimizer
 
-class BaseModel:
+from sklearn.base import BaseEstimator
+
+class BaseModel(BaseEstimator):
     """Basic genetic algorithm model.
     Defines general API for models, but isn't inteded for actual
     use as the key methods are left to be implemented in the subclasses.

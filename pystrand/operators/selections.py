@@ -11,7 +11,10 @@ class BaseSelection:
             self,
             **kwargs):
         self._name = kwargs.get("name", "Selection")
-        self._rng = np.random.default_rng()
+        if kwargs['random_state']:
+            self._rng = kwargs['random_state']
+        else:
+            self._rng = np.random.default_rng()
 
     def __select__(self, population):
         return population.individuals

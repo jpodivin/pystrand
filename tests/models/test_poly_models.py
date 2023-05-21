@@ -34,4 +34,4 @@ class TestPolyModel(unittest.TestCase):
             model = models.PowerPolyModel(domain, max_iterations=10)
             test_samples = domain[domain % 0.02 < 0.1]
             test_labels = self.dummy_data['linear'](test_samples)
-            model.fit(test_samples, test_labels)
+            model.fit(test_samples.reshape(-1, 1), test_labels)

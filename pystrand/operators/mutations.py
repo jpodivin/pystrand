@@ -13,10 +13,13 @@ class BaseMutation:
         Default is 0.0
 
     """
-    def __init__(self, probability=0.0):
+    def __init__(self, probability=0.0, random_state=None):
         """Set up random generator to be used by mutation operator.
         """
-        self._random_generator = np.random.default_rng()
+        if random_state:
+            self._random_generator = random_state
+        else:
+            self._random_generator = np.random.default_rng()
         self._mutation_probability = probability
 
     def __mutate__(self, genotype):
